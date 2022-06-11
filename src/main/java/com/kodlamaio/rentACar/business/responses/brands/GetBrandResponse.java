@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetBrandResponse {
 	private int id;
+	private String name;
 }

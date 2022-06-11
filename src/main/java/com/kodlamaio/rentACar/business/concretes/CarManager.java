@@ -1,6 +1,7 @@
 package com.kodlamaio.rentACar.business.concretes;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -8,43 +9,33 @@ import com.kodlamaio.rentACar.business.abstracts.CarService;
 import com.kodlamaio.rentACar.business.requests.cars.CreateCarRequest;
 import com.kodlamaio.rentACar.business.requests.cars.DeleteCarRequest;
 import com.kodlamaio.rentACar.business.requests.cars.UpdateCarRequest;
+import com.kodlamaio.rentACar.business.responses.cars.GetAllCarsResponse;
 import com.kodlamaio.rentACar.business.responses.cars.GetCarResponse;
+import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.ErrorResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
-import com.kodlamaio.rentACar.entities.concretes.Brand;
 import com.kodlamaio.rentACar.entities.concretes.Car;
-import com.kodlamaio.rentACar.entities.concretes.Color;
 @Service
 public class CarManager implements CarService{
 	
 	private CarRepository carRepository;
+	private ModelMapperService modelMapperService;
 	
-	public CarManager(CarRepository carRepository) {
+	public CarManager(CarRepository carRepository, ModelMapperService modelMapperService) {
 		this.carRepository = carRepository;
+		this.modelMapperService = modelMapperService;
 	}
 
 	@Override
 	public Result add(CreateCarRequest createCarRequest) {
 		if(!checkIfBrandCount(createCarRequest.getBrandId())) {
 
-			Car car = new Car();
-			car.setDescription(createCarRequest.getDescription());
-			car.setDailyPrice(createCarRequest.getDailyPrice());
-			car.setKilometer(createCarRequest.getKilometer());
-			car.setNumberPlate(createCarRequest.getNumberPlate());
+			Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
 			car.setState(1);
-			
-			Brand brand = new Brand();
-			brand.setId(createCarRequest.getBrandId());
-			car.setBrand(brand);
-			
-			Color color = new Color();
-			color.setId(createCarRequest.getColorId());
-			car.setColor(color);
 
 			this.carRepository.save(car);
 			return new SuccessResult("CAR.ADDED");
@@ -62,19 +53,19 @@ public class CarManager implements CarService{
 
 	@Override
 	public Result update(UpdateCarRequest updateCarRequest) {
-		Car car = carRepository.findById(updateCarRequest.getId());
-		car.setDescription(updateCarRequest.getDescription());
-		car.setDailyPrice(updateCarRequest.getDailyPrice());
-		car.setNumberPlate(updateCarRequest.getNumberPlate());
-		car.setKilometer(updateCarRequest.getKilometer());
-		
-		Brand brand = new Brand();
-		brand.setId(updateCarRequest.getBrandId());
-		car.setBrand(brand);
-		
-		Color color = new Color();
-		color.setId(updateCarRequest.getColorId());
-		car.setColor(color);
+		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
+//		car.setDescription(updateCarRequest.getDescription());
+//		car.setDailyPrice(updateCarRequest.getDailyPrice());
+//		car.setNumberPlate(updateCarRequest.getNumberPlate());
+//		car.setKilometer(updateCarRequest.getKilometer());
+//		
+//		Brand brand = new Brand();
+//		brand.setId(updateCarRequest.getBrandId());
+//		car.setBrand(brand);
+//		
+//		Color color = new Color();
+//		color.setId(updateCarRequest.getColorId());
+//		car.setColor(color);
 		
 		this.carRepository.save(car);
 		
@@ -82,24 +73,32 @@ public class CarManager implements CarService{
 	}
 
 	@Override
-	public DataResult<Car> getById(GetCarResponse getCarResponse) {
-		return new SuccessDataResult<Car>(this.carRepository.findById(getCarResponse.getId()));
+	public DataResult<GetCarResponse> getById(int id) {
+		Car brand = this.carRepository.findById(id);
+		
+		GetCarResponse response = this.modelMapperService.forResponse().map(brand, GetCarResponse.class);
+		return new SuccessDataResult<GetCarResponse>(response);
 	}
 	
 	@Override
-	public DataResult<List<Car>> getAll() {
-		return new SuccessDataResult<List<Car>>(this.carRepository.findAll());
+	public DataResult<List<GetAllCarsResponse>> getAll() {
+		List<Car> cars = this.carRepository.findAll();
+		
+		List<GetAllCarsResponse> response =
+				cars.stream().map(car->this.modelMapperService.forResponse()
+						.map(car, GetAllCarsResponse.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<GetAllCarsResponse>>(response);
 	}
 	
 	public boolean checkIfBrandCount(int brandId) {	
-		List<Car> result = carRepository.getByBrandId(brandId);
+		List<Car> result = this.carRepository.getByBrandId(brandId);
 		if (result.size() < 5) {
 			return false;
 		}
 		return true;
 	}
 
-
+//Brandleri tek tek dolaş, her bir brand için modelMaperService çalıştır
 
 
 	

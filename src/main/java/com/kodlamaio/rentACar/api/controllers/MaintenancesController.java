@@ -6,38 +6,40 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.MaintenanceService;
 import com.kodlamaio.rentACar.business.requests.maintenances.CreateMaintenanceRequest;
 import com.kodlamaio.rentACar.business.requests.maintenances.DeleteMaintenanceRequest;
 import com.kodlamaio.rentACar.business.requests.maintenances.UpdateMaintenanceRequest;
+import com.kodlamaio.rentACar.business.responses.maintenance.GetAllMaintenancesResponse;
 import com.kodlamaio.rentACar.business.responses.maintenance.GetMaintenanceResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
-import com.kodlamaio.rentACar.entities.concretes.Maintenance;
 
 @RestController
 @RequestMapping("api/maintenances")
 public class MaintenancesController {
 	private MaintenanceService maintenanceService;
+	
 	public MaintenancesController(MaintenanceService maintenanceService) {
 		this.maintenanceService = maintenanceService;
 	}
 	
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateMaintenanceRequest createCarRequest) {
-		return this.maintenanceService.add(createCarRequest);
+	public Result add(@RequestBody CreateMaintenanceRequest createMaintenanceRequest) {
+		return this.maintenanceService.add(createMaintenanceRequest);
 	}
 	
 	@PostMapping("/delete")
-	public Result delete(@RequestBody DeleteMaintenanceRequest createCarRequest) {
-		return this.maintenanceService.delete(createCarRequest);
+	public Result delete(@RequestParam DeleteMaintenanceRequest deleteMaintenanceRequest) {
+		return this.maintenanceService.delete(deleteMaintenanceRequest);
 	}
 	
 	@PostMapping("/update")
-	public Result update(@RequestBody UpdateMaintenanceRequest createCarRequest) {
-		return this.maintenanceService.update(createCarRequest);
+	public Result update(@RequestBody UpdateMaintenanceRequest updateMaintenanceRequest) {
+		return this.maintenanceService.update(updateMaintenanceRequest);
 	}
 	
 	@PostMapping("/updateState")
@@ -46,12 +48,12 @@ public class MaintenancesController {
 	}
 	
 	@GetMapping("/getById")
-	public Result getById(@RequestBody GetMaintenanceResponse getMaintenanceResponse) {
-		return this.maintenanceService.getById(getMaintenanceResponse);
+	public DataResult<GetMaintenanceResponse> getById(@RequestParam int id) {
+		return this.maintenanceService.getById(id);
 	}
 	
 	@GetMapping("/getAll")
-	public DataResult<List<Maintenance>> getAll(){
+	public DataResult<List<GetAllMaintenancesResponse>> getAll(){
 		return this.maintenanceService.getAll();
 	}
 }
