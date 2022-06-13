@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.business.responses.maintenance;
+package com.kodlamaio.rentACar.business.responses.maintenances;
 
 import java.sql.Date;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMaintenanceResponse {
+public class GetAllMaintenancesResponse {
 	private int id;
 	private Date dateSent;
 	private Date dateReturned;

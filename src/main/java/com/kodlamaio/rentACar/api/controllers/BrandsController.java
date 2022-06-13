@@ -30,11 +30,6 @@ public class BrandsController {
 		this.brandService = brandService;
 	}
 
-	@GetMapping("/sayhello") //endpoint
-	public String sayHello() {
-		return "Hello Spring";
-	}
-	
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateBrandRequest createBrandRequest) {
 		return this.brandService.add(createBrandRequest);

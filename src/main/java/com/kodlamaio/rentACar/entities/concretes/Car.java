@@ -48,16 +48,13 @@ public class Car {
 	@Column(name="kilometer")
 	private int kilometer;
 	
+	@ManyToOne
+	@JoinColumn(name = "city_id")
+	private City city;
+	
 	@Column(name="state")
 	private int state;
 	
 	@OneToMany(mappedBy = "car")
 	List<Maintenance> maintenances;
-	
-	
-//	public void setBrandId(Brand brand) {
-//		this.brand.setId(brand.getId());
-//	}
-	
-	
 }

@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.business.responses.brands;
+package com.kodlamaio.rentACar.business.requests.additionalServices;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetBrandResponse {
-	private String name;
+public class DeleteAdditionalServiceRequest {
+	private int id;
 }
