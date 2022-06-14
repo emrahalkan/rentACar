@@ -18,7 +18,6 @@ import com.kodlamaio.rentACar.core.utilities.adapters.abstracts.PersonCheckServi
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
-import com.kodlamaio.rentACar.core.utilities.results.ErrorResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
@@ -41,15 +40,12 @@ public class UserManager implements UserService {
 
 	@Override
 	public Result add(CreateUserRequest createUserRequest) throws NumberFormatException, RemoteException {
-		
-		checkIfUserExistsByNationality(createUserRequest.getNationality());
+		checkIfUserExistsByNationality(createUserRequest);
 		User user = this.mapperService.forRequest().map(createUserRequest, User.class);
-		if (personCheckService.checkPerson(user)) {
-			this.userRepository.save(user);
-			return new SuccessResult("USER.ADDED");
-		}
-		return new ErrorResult("USER.WASN'T.ADDED");
+		this.userRepository.save(user);
+		return new SuccessResult("USER.ADDED");
 	}
+	
 
 	@Override
 	public Result delete(DeleteUserRequest deleteUserRequest) {
@@ -81,10 +77,9 @@ public class UserManager implements UserService {
 		return new SuccessDataResult<GetUserResponse>(response);
 	}
 
-	private void checkIfUserExistsByNationality(String nationality) {
-		User currentUser = this.userRepository.findByNationality(nationality);
-		if (currentUser != null) {
-			throw new BusinessException("USER.EXISTS");
+	private void checkIfUserExistsByNationality(CreateUserRequest createUserRequest) throws NumberFormatException, RemoteException {
+		if (!personCheckService.checkPerson(createUserRequest)) {
+			throw new BusinessException("USER.WASN'T.ADDED");
 		}
 	}
 
