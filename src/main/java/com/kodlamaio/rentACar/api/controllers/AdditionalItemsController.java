@@ -49,5 +49,4 @@ public class AdditionalItemsController {
 	public DataResult<List<GetAllAdditionalItemsResponse>> getAll(){
 		return this.additionalItemService.getAll();
 	}
-	
 }

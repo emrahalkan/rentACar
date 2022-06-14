@@ -47,7 +47,8 @@ public class BrandManager implements BrandService {
 		List<GetAllBrandsResponse> response =
 				brands.stream().map(brand->this.modelMapperService.forResponse()
 						.map(brand, GetAllBrandsResponse.class)).collect(Collectors.toList());
-		return new SuccessDataResult<List<GetAllBrandsResponse>>(response);	}
+		return new SuccessDataResult<List<GetAllBrandsResponse>>(response);	
+	}
 	
 	@Override
 	public DataResult<GetBrandResponse> getById(int id) {

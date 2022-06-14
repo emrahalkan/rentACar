@@ -46,9 +46,6 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 		double totalPrice = calculateTotalPriceAdditionalService(rentalTotalDays, additionalItemPrice);
 		additionalService.setTotalPrice(totalPrice);
 		
-		Rental rental = this.rentalRepository.findById(createAdditionalServiceRequest.getRentalId());
- 		rental.setTotalPrice(rental.getTotalPrice() + totalPrice );;
-		
 		this.additionalServiceRepository.save(additionalService);
 		return new SuccessResult("ADDITIONALSERVICE.ADDED");
 	}
@@ -57,8 +54,6 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 	public Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest) {
 		this.additionalServiceRepository.deleteById(deleteAdditionalServiceRequest.getId());
 		
-		Rental rental = this.rentalRepository.findById(deleteAdditionalServiceRequest.ge);
-		rental.setTotalPrice(rental.getTotalPrice() - additionalService.getTotalPrice());
 		return new SuccessResult("ADDITIONALSERVICE.DELETED");
 	}
 
@@ -75,12 +70,8 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 		double totalPrice = calculateTotalPriceAdditionalService(rentalTotalDays, additionalItemPrice);
 		additionalService.setTotalPrice(totalPrice);
 		
-		
-		rental.setTotalPrice(rental.getTotalPrice() - additionalService.getTotalPrice());
- 		rental.setTotalPrice(rental.getTotalPrice() + totalPrice );
-		
 		this.additionalServiceRepository.save(additionalService);		
-		return null;
+		return new SuccessResult("ADDITIONALSERVICE.UPDATED");
 	}
 
 	@Override
@@ -89,7 +80,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 		
 		GetAdditionalServiceResponse response = this.modelMapperService.forResponse()
 				.map(additionalService, GetAdditionalServiceResponse.class);
-		return new SuccessDataResult<GetAdditionalServiceResponse>(response, ".ADDITIONALSERVICE");
+		return new SuccessDataResult<GetAdditionalServiceResponse>(response, "GET.ADDITIONALSERVICE");
 	}
 
 	@Override
@@ -106,15 +97,15 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 		return days*price;
 	}
 	
-	private double allRentalAdditionalTotalPrice(int id) {
-		double totalAdditionalService = 0;
-		Rental rental = this.rentalRepository.findById(id);
-		List<AdditionalService> additionalServices = this.additionalServiceRepository.getByRentalId(rental.getId());
-		
-		for (AdditionalService additionalService : additionalServices) {
-			totalAdditionalService += additionalService.getTotalPrice();
-		}
-		return totalAdditionalService;
-	}
+//	private double allRentalAdditionalTotalPrice(int id) {
+//		double totalAdditionalService = 0;
+//		Rental rental = this.rentalRepository.findById(id);
+//		List<AdditionalService> additionalServices = this.additionalServiceRepository.getByRentalId(rental.getId());
+//		
+//		for (AdditionalService additionalService : additionalServices) {
+//			totalAdditionalService += additionalService.getTotalPrice();
+//		}
+//		return totalAdditionalService;
+//	}
 	
 }

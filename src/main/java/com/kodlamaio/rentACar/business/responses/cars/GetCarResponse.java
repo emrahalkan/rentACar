@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetCarResponse {
-	private int id;
-	private int dailyPrice;
 	private String description;
+	private double dailyPrice;
 	private int brandId;
 	private int colorId;
+	private String numberPlate;
+	private int kilometer;
+	private String cityId;
 }

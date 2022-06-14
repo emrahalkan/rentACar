@@ -54,19 +54,6 @@ public class CarManager implements CarService{
 	@Override
 	public Result update(UpdateCarRequest updateCarRequest) {
 		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
-//		car.setDescription(updateCarRequest.getDescription());
-//		car.setDailyPrice(updateCarRequest.getDailyPrice());
-//		car.setNumberPlate(updateCarRequest.getNumberPlate());
-//		car.setKilometer(updateCarRequest.getKilometer());
-//		
-//		Brand brand = new Brand();
-//		brand.setId(updateCarRequest.getBrandId());
-//		car.setBrand(brand);
-//		
-//		Color color = new Color();
-//		color.setId(updateCarRequest.getColorId());
-//		car.setColor(color);
-		
 		this.carRepository.save(car);
 		
 		return new SuccessResult("CAR.UPDATED");

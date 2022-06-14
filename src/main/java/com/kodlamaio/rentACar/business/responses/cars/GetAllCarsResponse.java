@@ -15,4 +15,5 @@ public class GetAllCarsResponse {
 	private int brandId;
 	private int colorId;
 	private int state;
+	private int cityId;
 }

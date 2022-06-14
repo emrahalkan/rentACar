@@ -2,11 +2,10 @@ package com.kodlamaio.rentACar.business.concretes;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.RentalService;
@@ -18,32 +17,23 @@ import com.kodlamaio.rentACar.business.responses.rentals.GetRentalResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
-import com.kodlamaio.rentACar.core.utilities.results.ErrorResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
-import com.kodlamaio.rentACar.dataAccess.abstracts.AdditionalServiceRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
-import com.kodlamaio.rentACar.entities.concretes.AdditionalService;
 import com.kodlamaio.rentACar.entities.concretes.Car;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
 
 @Service
 public class RentalManager implements RentalService {
-
+	
+	@Autowired
 	private RentalRepository rentalRepository;
+	@Autowired
 	private CarRepository carRepository;
+	@Autowired
 	private ModelMapperService modelMapperService;
-	private AdditionalServiceRepository additionalServiceRepository;
-
-	public RentalManager(RentalRepository rentalRepository, CarRepository carRepository,
-			ModelMapperService modelMapperService) {
-		this.rentalRepository = rentalRepository;
-		this.carRepository = carRepository;
-		this.modelMapperService = modelMapperService,
-		this.additionalServiceRepository = additionalServiceRepository;
-	}
 
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
@@ -53,28 +43,19 @@ public class RentalManager implements RentalService {
 		Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
 		
 		int diffDate = (int) ChronoUnit.DAYS.between(rental.getPickupDate(), rental.getReturnDate());
-		rental.setTotalDays((int) diffDate);
+		rental.setTotalDays(diffDate);
 		
 		Car car = this.carRepository.findById(createRentalRequest.getCarId());
-		calculateTotalPrice(rental, car.getDailyPrice());
-		
+		double totalPrice = calculateTotalPrice(rental, car.getDailyPrice());
+	
 		car.setState(3);
-		rental.setPickupCityId(car.getCity());
 		car.setCity(rental.getReturnCityId());
-		double totalPrice = car.getDailyPrice() * diffDate;
+		
 		rental.setTotalPrice(totalPrice);
 
 		rentalRepository.save(rental);
 		return new SuccessResult("RENTAL.ADDED");
-
-//			else {
-//				return new ErrorResult("Toplam gün sayısı 0 dan düşük olamaz");
-//			}
 	}
-
-//			return new ErrorResult("Araba avaible olmalıdır");
-//		}
-
 	@Override
 	public Result delete(DeleteRentalRequest deleteRentalRequest) {
 		Rental rental = this.rentalRepository.findById(deleteRentalRequest.getId());
@@ -84,23 +65,22 @@ public class RentalManager implements RentalService {
 
 	@Override
 	public Result update(UpdateRentalRequest updateRentalRequest) {
+		checkIfCarState(updateRentalRequest.getCarId());
+		checkDateToRentACar(updateRentalRequest.getPickupDate(), updateRentalRequest.getReturnDate());
+		
 		Rental rental = this.modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
+		
+		int diffDate = (int) ChronoUnit.DAYS.between(rental.getPickupDate(), rental.getReturnDate());
+		rental.setTotalDays(diffDate);
+		
+		Car car = this.carRepository.findById(updateRentalRequest.getCarId());
+		double totalPrice = calculateTotalPrice(rental, car.getDailyPrice());
+	
+		rental.setPickupCityId(car.getCity());
+		rental.setTotalPrice(totalPrice);
 
-		long diffDate = (updateRentalRequest.getReturnDate().getTime()
-				- (updateRentalRequest.getPickupDate().getTime()));
-		if (checkDateToRentACar(updateRentalRequest.getPickupDate(), updateRentalRequest.getReturnDate())) {
-			rental.setTotalDays((int) diffDate);
-
-			Car car = this.carRepository.findById(updateRentalRequest.getCarId());
-			car.setState(3);
-			double totalPrice = car.getDailyPrice() * diffDate;
-			rental.setTotalPrice(totalPrice);
-
-			rentalRepository.save(rental);
-			return new SuccessResult("RENTAL.UPDATED");
-		} else {
-			return new ErrorResult("Toplam gün sayısı 0 dan düşük olamaz");
-		}
+		rentalRepository.save(rental);
+		return new SuccessResult("RENTAL.ADDED");
 	}
 
 	public Result updateState(UpdateRentalRequest updateRentalRequest) {
@@ -134,7 +114,7 @@ public class RentalManager implements RentalService {
 
 	private void checkIfCarState(int id) {
 		Car car = this.carRepository.findById(id);
-		if (car.getState() == 2) {
+		if (car.getState() == 2 || car.getState() == 3) {
 			throw new BusinessException("CAR.IS.NOT.AVAIBLE");
 		}
 	}
@@ -156,15 +136,7 @@ public class RentalManager implements RentalService {
 		double days = rental.getTotalDays();
 		double totalDailyPrice =  days * dailyPrice;
 		double diffCityPrice =  isDiffReturnCityFromPickUpCity(rental.getPickupCityId().getId(), rental.getReturnCityId().getId());
-		double totalAdditionalService = 0;
-		
-		List<AdditionalService> additionalServices = this.additionalServiceRepository.getByRentalId(rental.getId());
-		
-		for (AdditionalService additionalService : additionalServices) {
-			totalAdditionalService += additionalService.getTotalPrice();
-		}
-		double totalPrice = totalDailyPrice + diffCityPrice + totalAdditionalService;
-		
+		double totalPrice = totalDailyPrice + diffCityPrice;
 		return totalPrice;
 	}
 }
