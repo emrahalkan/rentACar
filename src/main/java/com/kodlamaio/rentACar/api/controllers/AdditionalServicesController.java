@@ -20,7 +20,7 @@ import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
 @RestController
-@RequestMapping("/api/additionalServices")
+@RequestMapping("/api/additionalService")
 public class AdditionalServicesController {
 	
 	@Autowired
