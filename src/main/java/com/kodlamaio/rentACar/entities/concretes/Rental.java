@@ -44,6 +44,10 @@ public class Rental {
 	private Car car;
 	
 	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
+	
+	@ManyToOne
 	@JoinColumn(name="pickup_city_id", referencedColumnName = "id")
 	private City pickupCityId;
 	

@@ -55,6 +55,9 @@ public class Car {
 	@Column(name="state")
 	private int state;
 	
+	@Column(name ="min_findex_score")
+	private int minFindexScore;
+	
 	@OneToMany(mappedBy = "car")
 	List<Maintenance> maintenances;
 }

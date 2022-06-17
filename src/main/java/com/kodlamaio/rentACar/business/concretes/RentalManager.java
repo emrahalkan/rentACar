@@ -14,6 +14,7 @@ import com.kodlamaio.rentACar.business.requests.rentals.DeleteRentalRequest;
 import com.kodlamaio.rentACar.business.requests.rentals.UpdateRentalRequest;
 import com.kodlamaio.rentACar.business.responses.rentals.GetAllRentalsResponse;
 import com.kodlamaio.rentACar.business.responses.rentals.GetRentalResponse;
+import com.kodlamaio.rentACar.core.utilities.adapters.abstracts.FindeksService;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
@@ -22,8 +23,10 @@ import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
+import com.kodlamaio.rentACar.dataAccess.abstracts.UserRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
+import com.kodlamaio.rentACar.entities.concretes.User;
 
 @Service
 public class RentalManager implements RentalService {
@@ -34,12 +37,16 @@ public class RentalManager implements RentalService {
 	private CarRepository carRepository;
 	@Autowired
 	private ModelMapperService modelMapperService;
+	@Autowired
+	private FindeksService findeksService;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
 		checkIfCarState(createRentalRequest.getCarId());
 		checkDateToRentACar(createRentalRequest.getPickupDate(), createRentalRequest.getReturnDate());
-		
+		checkUserFindexScore(createRentalRequest);
 		Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
 		
 		int diffDate = (int) ChronoUnit.DAYS.between(rental.getPickupDate(), rental.getReturnDate());
@@ -138,5 +145,13 @@ public class RentalManager implements RentalService {
 		double diffCityPrice =  isDiffReturnCityFromPickUpCity(rental.getPickupCityId().getId(), rental.getReturnCityId().getId());
 		double totalPrice = totalDailyPrice + diffCityPrice;
 		return totalPrice;
+	}
+	
+	private void checkUserFindexScore(CreateRentalRequest createRentalRequest) {
+		Car car = this.carRepository.findById(createRentalRequest.getCarId());
+		User user = this.userRepository.findById(createRentalRequest.getUserId());
+		if(findeksService.checkPerson(user.getNationality()) > car.getMinFindexScore()) {
+			throw new BusinessException("USER.IS.NOT.ENOUGH.FINDEX.SCORE");
+		}
 	}
 }

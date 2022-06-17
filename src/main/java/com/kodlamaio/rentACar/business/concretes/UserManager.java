@@ -14,6 +14,7 @@ import com.kodlamaio.rentACar.business.requests.users.DeleteUserRequest;
 import com.kodlamaio.rentACar.business.requests.users.UpdateUserRequest;
 import com.kodlamaio.rentACar.business.responses.users.GetAllUsersResponse;
 import com.kodlamaio.rentACar.business.responses.users.GetUserResponse;
+import com.kodlamaio.rentACar.core.utilities.adapters.abstracts.FindeksService;
 import com.kodlamaio.rentACar.core.utilities.adapters.abstracts.PersonCheckService;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
@@ -33,7 +34,7 @@ public class UserManager implements UserService {
 	private PersonCheckService personCheckService;
 
 	public UserManager(UserRepository userRepository, ModelMapperService mapperService,
-			PersonCheckService personCheckService) {
+			PersonCheckService personCheckService, FindeksService findeksService) {
 		this.userRepository = userRepository;
 		this.mapperService = mapperService;
 		this.personCheckService = personCheckService;
@@ -42,12 +43,9 @@ public class UserManager implements UserService {
 	@Override
 	public Result add(CreateUserRequest createUserRequest) throws NumberFormatException, RemoteException {
 		
-		checkIfUserExistsByNationality(createUserRequest.getNationality());
+		checkIfUserExistsByNationality(createUserRequest);
 		User user = this.mapperService.forRequest().map(createUserRequest, User.class);
-		if (personCheckService.checkPerson(user)) {
-			this.userRepository.save(user);
-			return new SuccessResult("USER.ADDED");
-		}
+		this.userRepository.save(user);
 		return new ErrorResult("USER.WASN'T.ADDED");
 	}
 
@@ -81,9 +79,8 @@ public class UserManager implements UserService {
 		return new SuccessDataResult<GetUserResponse>(response);
 	}
 
-	private void checkIfUserExistsByNationality(String nationality) {
-		User currentUser = this.userRepository.findByNationality(nationality);
-		if (currentUser != null) {
+	private void checkIfUserExistsByNationality(CreateUserRequest createUserRequest) throws NumberFormatException, RemoteException {
+		if (personCheckService.checkPerson(createUserRequest)) {
 			throw new BusinessException("USER.EXISTS");
 		}
 	}
