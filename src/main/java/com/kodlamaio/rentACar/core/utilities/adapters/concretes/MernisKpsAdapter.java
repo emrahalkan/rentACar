@@ -17,7 +17,7 @@ public class MernisKpsAdapter implements PersonCheckService {
 		
 		KPSPublicSoapProxy kpsPublicSoapProxy = new KPSPublicSoapProxy();
 		boolean result = kpsPublicSoapProxy.TCKimlikNoDogrula
-				(Long.parseLong(user.getNationality()), user.getFirstName(), user.getLastName(), 1994);
+				(Long.parseLong(user.getNationality()), user.getFirstName(), user.getLastName(), user.getBirthDate().getYear());
 		return result;
 	}
 

@@ -58,8 +58,9 @@ public class MaintenanceManager implements MaintenanceService{
 		return new SuccessResult("MAINTENANCE.UPDATED");
 	}
 	
-	public Result updateState(UpdateMaintenanceRequest updateMaintenanceRequest) {
-		Car car = carRepository.findById(updateMaintenanceRequest.getCarId());
+	@Override
+	public Result updateState(int carId) {
+		Car car = carRepository.findById(carId);
 		if (car.getState() == 1) {
 			car.setState(2);
 		}
@@ -85,7 +86,7 @@ public class MaintenanceManager implements MaintenanceService{
 		List<Maintenance> maintenances = this.maintenanceRepository.findAll();
 		
 		List<GetAllMaintenancesResponse> response = maintenances.stream().map(maintenance->this.modelMapperService.forResponse()
-				.map(maintenances, GetAllMaintenancesResponse.class)).collect(Collectors.toList());
+				.map(maintenance, GetAllMaintenancesResponse.class)).collect(Collectors.toList());
 		return new SuccessDataResult<List<GetAllMaintenancesResponse>>(response);
 	}
 	

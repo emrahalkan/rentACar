@@ -35,7 +35,7 @@ public class User {
 	@Column(name ="nationality")
 	private String nationality;
 	
-	@Column(name = "birthDate")
+	@Column(name = "birth_date")
 	private LocalDate birthDate;
 	
 	@Column(name= "email")
@@ -46,4 +46,7 @@ public class User {
 	
 	@OneToMany(mappedBy = "user")
 	private List<Rental> rentals;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Address> addresses;
 }

@@ -1,5 +1,7 @@
 package com.kodlamaio.rentACar.entities.concretes;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,35 +11,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","invoices"})
+@NoArgsConstructor
 @Entity
-@Table(name = "additional_services")
-public class AdditionalService {
+@Table(name="invoices")
+
+public class Invoice {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name ="totalDays")
-	private int totalDays;
 	
-	@Column(name = "totalPrice")
+	@Column(name ="invoice_number")
+	private int invoiceNumber;
+	
+	@Column(name="currently_date")
+	private LocalDate currentDate;
+	
+	@Column(name = "total_price")
 	private double totalPrice;
 	
 	@ManyToOne
-	@JoinColumn(name="rental_id")
+	@JoinColumn(name ="rental_id")
 	private Rental rental;
 	
-	@ManyToOne
-	@JoinColumn(name = "additional_item_id")
-	private AdditionalItem additionalItem;
 }

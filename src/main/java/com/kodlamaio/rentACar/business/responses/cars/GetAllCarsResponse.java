@@ -10,10 +10,13 @@ import lombok.NoArgsConstructor;
 public class GetAllCarsResponse {
 	
 	private int id;
-	private int dailyPrice;
 	private String description;
+	private double dailyPrice;
 	private int brandId;
 	private int colorId;
-	private int state;
-	private int cityId;
+	private String numberPlate;
+	private int kilometer;
+	private String cityId;
+	private int minFindexScore;
+	
 }

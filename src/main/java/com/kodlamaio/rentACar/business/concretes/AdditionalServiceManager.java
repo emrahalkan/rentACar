@@ -95,17 +95,5 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 	
 	private double calculateTotalPriceAdditionalService(int days, double price) {
 		return days*price;
-	}
-	
-//	private double allRentalAdditionalTotalPrice(int id) {
-//		double totalAdditionalService = 0;
-//		Rental rental = this.rentalRepository.findById(id);
-//		List<AdditionalService> additionalServices = this.additionalServiceRepository.getByRentalId(rental.getId());
-//		
-//		for (AdditionalService additionalService : additionalServices) {
-//			totalAdditionalService += additionalService.getTotalPrice();
-//		}
-//		return totalAdditionalService;
-//	}
-	
+	}	
 }

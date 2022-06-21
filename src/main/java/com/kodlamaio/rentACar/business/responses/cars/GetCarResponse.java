@@ -15,4 +15,5 @@ public class GetCarResponse {
 	private String numberPlate;
 	private int kilometer;
 	private String cityId;
+	private int minFindexScore;
 }

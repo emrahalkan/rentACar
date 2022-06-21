@@ -43,11 +43,11 @@ public class MaintenancesController {
 	}
 	
 	@PostMapping("/updateState")
-	public Result updateState(@RequestBody UpdateMaintenanceRequest updateMaintenanceRequest) {
-		return this.maintenanceService.updateState(updateMaintenanceRequest);
+	public Result updateState(@RequestParam int id) {
+		return this.maintenanceService.updateState(id);
 	}
 	
-	@GetMapping("/getById")
+	@PostMapping("/getById")
 	public DataResult<GetMaintenanceResponse> getById(@RequestParam int id) {
 		return this.maintenanceService.getById(id);
 	}

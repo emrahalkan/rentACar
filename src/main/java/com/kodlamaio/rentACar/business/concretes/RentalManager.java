@@ -46,7 +46,7 @@ public class RentalManager implements RentalService {
 	public Result add(CreateRentalRequest createRentalRequest) {
 		checkIfCarState(createRentalRequest.getCarId());
 		checkDateToRentACar(createRentalRequest.getPickupDate(), createRentalRequest.getReturnDate());
-		checkUserFindexScore(createRentalRequest);
+		//checkUserFindexScore(createRentalRequest);
 		Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
 		
 		int diffDate = (int) ChronoUnit.DAYS.between(rental.getPickupDate(), rental.getReturnDate());
