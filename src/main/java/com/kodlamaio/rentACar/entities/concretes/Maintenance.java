@@ -27,11 +27,11 @@ public class Maintenance {
 	@Column(name="id")
 	private int id;
 	
-	@Column(name="dateSent")
-	private Date dateSent;
+	@Column(name="sent_date")
+	private Date sentDate;
 	
-	@Column(name="dateReturned")
-	private Date dateReturned;
+	@Column(name="returned_date")
+	private Date returnedDate;
 	
 	@ManyToOne
 	@JoinColumn(name="car_id")

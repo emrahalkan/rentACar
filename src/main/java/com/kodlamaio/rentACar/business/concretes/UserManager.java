@@ -72,7 +72,7 @@ public class UserManager implements UserService {
 
 	@Override
 	public DataResult<GetUserResponse> getById(int id) {
-		User user = this.userRepository.findById(id);
+		User user = this.userRepository.findById(id).get();
 		
 		GetUserResponse response = this.mapperService.forResponse().map(user, GetUserResponse.class);
 		return new SuccessDataResult<GetUserResponse>(response);

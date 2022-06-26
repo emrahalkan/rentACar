@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetMaintenanceResponse {
 	private int id;
-	private Date dateSent;
-	private Date dateReturned;
+	private Date sentDate;
+	private Date returnedDate;
 	private int carId;
 }

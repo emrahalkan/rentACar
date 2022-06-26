@@ -18,5 +18,4 @@ public interface AddressService {
 	DataResult<GetAddressResponse> getById(int id);
 	DataResult<List<GetAllAddressesResponse>> getAllBillAddress(int userId, int addressType);
 	DataResult<List<GetAllAddressesResponse>> getAllContactAddress(int userId, int addressType);
-
 }

@@ -5,7 +5,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.RentalService;
@@ -31,28 +30,31 @@ import com.kodlamaio.rentACar.entities.concretes.User;
 @Service
 public class RentalManager implements RentalService {
 	
-	@Autowired
 	private RentalRepository rentalRepository;
-	@Autowired
 	private CarRepository carRepository;
-	@Autowired
 	private ModelMapperService modelMapperService;
-	@Autowired
 	private FindeksService findeksService;
-	@Autowired
 	private UserRepository userRepository;
 
+	public RentalManager(RentalRepository rentalRepository, CarRepository carRepository,
+			ModelMapperService modelMapperService, FindeksService findeksService, UserRepository userRepository) {
+		this.rentalRepository = rentalRepository;
+		this.carRepository = carRepository;
+		this.modelMapperService = modelMapperService;
+		this.findeksService = findeksService;
+		this.userRepository = userRepository;
+	}
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
 		checkIfCarState(createRentalRequest.getCarId());
 		checkDateToRentACar(createRentalRequest.getPickupDate(), createRentalRequest.getReturnDate());
-		//checkUserFindexScore(createRentalRequest);
+		checkUserFindexScore(createRentalRequest);
 		Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
 		
 		int diffDate = (int) ChronoUnit.DAYS.between(rental.getPickupDate(), rental.getReturnDate());
 		rental.setTotalDays(diffDate);
 		
-		Car car = this.carRepository.findById(createRentalRequest.getCarId());
+		Car car = this.carRepository.findById(createRentalRequest.getCarId()).get();
 		double totalPrice = calculateTotalPrice(rental, car.getDailyPrice());
 	
 		car.setState(3);
@@ -65,7 +67,7 @@ public class RentalManager implements RentalService {
 	}
 	@Override
 	public Result delete(DeleteRentalRequest deleteRentalRequest) {
-		Rental rental = this.rentalRepository.findById(deleteRentalRequest.getId());
+		Rental rental = this.rentalRepository.findById(deleteRentalRequest.getId()).get();
 		this.rentalRepository.delete(rental);
 		return new SuccessResult("RENTAL.DELETED");
 	}
@@ -80,7 +82,7 @@ public class RentalManager implements RentalService {
 		int diffDate = (int) ChronoUnit.DAYS.between(rental.getPickupDate(), rental.getReturnDate());
 		rental.setTotalDays(diffDate);
 		
-		Car car = this.carRepository.findById(updateRentalRequest.getCarId());
+		Car car = this.carRepository.findById(updateRentalRequest.getCarId()).get();
 		double totalPrice = calculateTotalPrice(rental, car.getDailyPrice());
 	
 		rental.setPickupCityId(car.getCity());
@@ -91,20 +93,19 @@ public class RentalManager implements RentalService {
 	}
 
 	public Result updateState(UpdateRentalRequest updateRentalRequest) {
-		Car car = carRepository.findById(updateRentalRequest.getCarId());
+		Car car = carRepository.findById(updateRentalRequest.getCarId()).get();
 		if (car.getState() == 1) {
 			car.setState(3);
 		} else {
 			car.setState(1);
 		}
-
 		carRepository.save(car);
 		return new SuccessResult("STATE.UPDATED");
 	}
 
 	@Override
 	public DataResult<GetRentalResponse> getById(int id) {
-		Rental rental = this.rentalRepository.findById(id);
+		Rental rental = this.rentalRepository.findById(id).get();
 		GetRentalResponse response = this.modelMapperService.forResponse().map(rental, GetRentalResponse.class);
 		return new SuccessDataResult<GetRentalResponse>(response);
 	}
@@ -120,7 +121,7 @@ public class RentalManager implements RentalService {
 	}
 
 	private void checkIfCarState(int id) {
-		Car car = this.carRepository.findById(id);
+		Car car = this.carRepository.findById(id).get();
 		if (car.getState() == 2 || car.getState() == 3) {
 			throw new BusinessException("CAR.IS.NOT.AVAIBLE");
 		}
@@ -148,8 +149,8 @@ public class RentalManager implements RentalService {
 	}
 	
 	private void checkUserFindexScore(CreateRentalRequest createRentalRequest) {
-		Car car = this.carRepository.findById(createRentalRequest.getCarId());
-		User user = this.userRepository.findById(createRentalRequest.getUserId());
+		Car car = this.carRepository.findById(createRentalRequest.getCarId()).get();
+		User user = this.userRepository.findById(createRentalRequest.getUserId()).get();
 		if(findeksService.checkPerson(user.getNationality()) > car.getMinFindexScore()) {
 			throw new BusinessException("USER.IS.NOT.ENOUGH.FINDEX.SCORE");
 		}

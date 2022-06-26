@@ -64,7 +64,7 @@ public class CityManager implements CityService {
 
 	@Override
 	public DataResult<GetCityResponse> getById(int id) {
-		City city = this.cityRepository.findById(id);
+		City city = this.cityRepository.findById(id).get();
 		GetCityResponse response = this.modelMapperService.forResponse().map(city, GetCityResponse.class);
 		return new SuccessDataResult<GetCityResponse>(response);
 	}

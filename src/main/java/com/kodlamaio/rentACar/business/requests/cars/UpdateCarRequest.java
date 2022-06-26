@@ -16,4 +16,6 @@ public class UpdateCarRequest {
 	private int kilometer;
 	private String numberPlate;
 	private int cityId;
+	private int minFindexScore;
+
 }

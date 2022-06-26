@@ -31,7 +31,7 @@ public class Car {
 	@Column(name="description")
 	private String description;
 	
-	@Column(name="dailyPrice")
+	@Column(name="daily_price")
 	private double dailyPrice;
 	
 	@ManyToOne
@@ -42,7 +42,7 @@ public class Car {
 	@JoinColumn(name = "color_id")
 	private Color color;
 	
-	@Column(name="numberPlate")
+	@Column(name="number_plate")
 	private String numberPlate;
 	
 	@Column(name="kilometer")

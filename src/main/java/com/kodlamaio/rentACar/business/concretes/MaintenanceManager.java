@@ -37,7 +37,7 @@ public class MaintenanceManager implements MaintenanceService{
 	public Result add(CreateMaintenanceRequest createMaintenanceRequest) {
 		Maintenance maintenance = this.modelMapperService.forRequest().map(createMaintenanceRequest, Maintenance.class);
 		
-		Car car = this.carRepository.findById(createMaintenanceRequest.getCarId());
+		Car car = this.carRepository.findById(createMaintenanceRequest.getCarId()).get();
 		car.setState(2);
 		
 		maintenanceRepository.save(maintenance);
@@ -46,7 +46,7 @@ public class MaintenanceManager implements MaintenanceService{
 
 	@Override
 	public Result delete(DeleteMaintenanceRequest deleteMaintenanceRequest) {
-		Maintenance maintenance = this.maintenanceRepository.findById(deleteMaintenanceRequest.getId());
+		Maintenance maintenance = this.maintenanceRepository.findById(deleteMaintenanceRequest.getId()).get();
 		this.maintenanceRepository.delete(maintenance);
 		return new SuccessResult("MAINTENANCE.DELETED");
 	}
@@ -60,27 +60,25 @@ public class MaintenanceManager implements MaintenanceService{
 	
 	@Override
 	public Result updateState(int carId) {
-		Car car = carRepository.findById(carId);
+		Car car = carRepository.findById(carId).get();
 		if (car.getState() == 1) {
 			car.setState(2);
 		}
 		else {
 			car.setState(1);
 		}
-		
 		carRepository.save(car);
 		return new SuccessResult("STATE.UPDATED");
-		
 	}
 
 	@Override
 	public DataResult<GetMaintenanceResponse> getById(int id) {
-		Maintenance maintenance = this.maintenanceRepository.findById(id);
+		Maintenance maintenance = this.maintenanceRepository.findById(id).get();
 		GetMaintenanceResponse response = this.modelMapperService.forResponse().map(maintenance, GetMaintenanceResponse.class);
 		return new SuccessDataResult<GetMaintenanceResponse>(response);
 			
 	}
-
+	
 	@Override
 	public DataResult<List<GetAllMaintenancesResponse>> getAll() {
 		List<Maintenance> maintenances = this.maintenanceRepository.findAll();

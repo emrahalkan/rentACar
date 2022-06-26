@@ -3,7 +3,6 @@ package com.kodlamaio.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.AdditionalServiceService;
@@ -25,24 +24,29 @@ import com.kodlamaio.rentACar.entities.concretes.Rental;
 
 @Service
 public class AdditionalServiceManager implements AdditionalServiceService{
-	@Autowired
 	private AdditionalServiceRepository additionalServiceRepository;
-	@Autowired
 	private AdditionalItemRepository additionalItemRepository;
-	@Autowired
 	private ModelMapperService modelMapperService;
-	@Autowired
 	private RentalRepository rentalRepository;
 
+
+	public AdditionalServiceManager(AdditionalServiceRepository additionalServiceRepository,
+			AdditionalItemRepository additionalItemRepository, ModelMapperService modelMapperService,
+			RentalRepository rentalRepository) {
+		this.additionalServiceRepository = additionalServiceRepository;
+		this.additionalItemRepository = additionalItemRepository;
+		this.modelMapperService = modelMapperService;
+		this.rentalRepository = rentalRepository;
+	}
 
 	@Override
 	public Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest) {
 		AdditionalService additionalService = this.modelMapperService.forRequest().map(createAdditionalServiceRequest, AdditionalService.class);
 		
-		int rentalTotalDays = this.rentalRepository.findById(createAdditionalServiceRequest.getRentalId()).getTotalDays();
+		int rentalTotalDays = this.rentalRepository.findById(createAdditionalServiceRequest.getRentalId()).get().getTotalDays();
 		additionalService.setTotalDays(rentalTotalDays);
 		
-		double additionalItemPrice = this.additionalItemRepository.findById(createAdditionalServiceRequest.getAdditionalItemId()).getPrice();
+		double additionalItemPrice = this.additionalItemRepository.findById(createAdditionalServiceRequest.getAdditionalItemId()).get().getPrice();
 		double totalPrice = calculateTotalPriceAdditionalService(rentalTotalDays, additionalItemPrice);
 		additionalService.setTotalPrice(totalPrice);
 		
@@ -62,11 +66,11 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 		AdditionalService additionalService = this.modelMapperService.forRequest()
 				.map(updateAdditionalServiceRequest, AdditionalService.class);
 		
-		Rental rental = this.rentalRepository.findById(updateAdditionalServiceRequest.getRentalId());
+		Rental rental = this.rentalRepository.findById(updateAdditionalServiceRequest.getRentalId()).get();
 		int rentalTotalDays = rental.getTotalDays();
 		additionalService.setTotalDays(rentalTotalDays);
 		
-		double additionalItemPrice = this.additionalItemRepository.findById(updateAdditionalServiceRequest.getAdditionalItemId()).getPrice();
+		double additionalItemPrice = this.additionalItemRepository.findById(updateAdditionalServiceRequest.getAdditionalItemId()).get().getPrice();
 		double totalPrice = calculateTotalPriceAdditionalService(rentalTotalDays, additionalItemPrice);
 		additionalService.setTotalPrice(totalPrice);
 		
@@ -76,7 +80,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
 	@Override
 	public DataResult<GetAdditionalServiceResponse> getById(int id) {
-		AdditionalService additionalService = this.additionalServiceRepository.findById(id);
+		AdditionalService additionalService = this.additionalServiceRepository.findById(id).get();
 		
 		GetAdditionalServiceResponse response = this.modelMapperService.forResponse()
 				.map(additionalService, GetAdditionalServiceResponse.class);

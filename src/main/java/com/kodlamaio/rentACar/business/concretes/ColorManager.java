@@ -61,7 +61,7 @@ public class ColorManager implements ColorService
 	}
 	@Override
 	public DataResult<GetColorResponse> getById(int id) {
-		Color color = this.colorRepository.getById(id);
+		Color color = this.colorRepository.findById(id).get();
 		
 		GetColorResponse response = this.modelMapperService.forResponse()
 				.map(color, GetColorResponse.class);

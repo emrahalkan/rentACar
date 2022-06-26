@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateMaintenanceRequest {
-	private Date dateSent;
-	private Date dateReturned;
+	private Date sentDate;
+	private Date returnedDate;
 	private int carId;
 }
