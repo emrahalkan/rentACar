@@ -22,16 +22,16 @@ import com.kodlamaio.rentACar.dataAccess.abstracts.ColorRepository;
 import com.kodlamaio.rentACar.entities.concretes.Color;
 
 @Service
-public class ColorManager implements ColorService
-{
+public class ColorManager implements ColorService {
 	private ColorRepository colorRepository;
 	private ModelMapperService modelMapperService;
-	
+
 	@Autowired
 	public ColorManager(ColorRepository colorRepository, ModelMapperService modelMapperService) {
 		this.colorRepository = colorRepository;
 		this.modelMapperService = modelMapperService;
 	}
+
 	@Override
 	public Result add(CreateColorRequest createColorRequest) {
 		checkIfColorExistsByName(createColorRequest.getName());
@@ -39,40 +39,53 @@ public class ColorManager implements ColorService
 		this.colorRepository.save(color);
 		return new SuccessResult("COLOR.ADDED");
 	}
+
 	@Override
 	public Result delete(DeleteColorRequest deleteColorRequest) {
+		checkIsColorNull(deleteColorRequest.getId());
 		this.colorRepository.deleteById(deleteColorRequest.getId());
 		return new SuccessResult("COLOR.DELETED");
 	}
+
 	@Override
 	public Result update(UpdateColorRequest updateColorRequest) {
+		checkIsColorNull(updateColorRequest.getId());
 		checkIfColorExistsByName(updateColorRequest.getName());
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
 		this.colorRepository.save(color);
 		return new SuccessResult("COLOR.UPDATED");
 	}
+
 	@Override
 	public DataResult<List<GetAllColorsResponse>> getAll() {
 		List<Color> colors = this.colorRepository.findAll();
-		
-		List<GetAllColorsResponse> response = colors.stream().map(color->this.modelMapperService.forResponse()
-				.map(color, GetAllColorsResponse.class)).collect(Collectors.toList());
+
+		List<GetAllColorsResponse> response = colors.stream()
+				.map(color -> this.modelMapperService.forResponse().map(color, GetAllColorsResponse.class))
+				.collect(Collectors.toList());
 		return new SuccessDataResult<List<GetAllColorsResponse>>(response);
 	}
+
 	@Override
 	public DataResult<GetColorResponse> getById(int id) {
+		checkIsColorNull(id);
 		Color color = this.colorRepository.findById(id).get();
-		
-		GetColorResponse response = this.modelMapperService.forResponse()
-				.map(color, GetColorResponse.class);
+
+		GetColorResponse response = this.modelMapperService.forResponse().map(color, GetColorResponse.class);
 		return new SuccessDataResult<GetColorResponse>(response);
 	}
-	
+
 	private void checkIfColorExistsByName(String name) {
 		Color currentColor = this.colorRepository.findByName(name);
 		if (currentColor != null) {
 			throw new BusinessException("COLOR.EXISTS");
 		}
 	}
-	
+
+	private void checkIsColorNull(int colorId) {
+		Color color = this.colorRepository.findById(colorId).get();
+		if (color == null) {
+			throw new BusinessException("THERE.IS.NOT.COLOR");
+		}
+	}
 }

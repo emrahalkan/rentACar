@@ -41,12 +41,14 @@ public class CityManager implements CityService {
 
 	@Override
 	public Result delete(DeleteCityRequest deleteCityRequest) {
+		checkIsCityNull(deleteCityRequest.getId());
 		this.cityRepository.deleteById(deleteCityRequest.getId());
 		return new SuccessResult("CITY.DELETED");
 	}
 
 	@Override
 	public Result update(UpdateCityRequest updateCityRequest) {
+		checkIsCityNull(updateCityRequest.getId());
 		checkIfBrandExistsByName(updateCityRequest.getName());
 		City city = this.modelMapperService.forRequest().map(updateCityRequest, City.class);
 		this.cityRepository.save(city);
@@ -64,6 +66,7 @@ public class CityManager implements CityService {
 
 	@Override
 	public DataResult<GetCityResponse> getById(int id) {
+		checkIsCityNull(id);
 		City city = this.cityRepository.findById(id).get();
 		GetCityResponse response = this.modelMapperService.forResponse().map(city, GetCityResponse.class);
 		return new SuccessDataResult<GetCityResponse>(response);
@@ -72,7 +75,14 @@ public class CityManager implements CityService {
 	private void checkIfBrandExistsByName(String name) {
 		City currentCity = this.cityRepository.findByName(name);
 		if (currentCity != null) {
-			throw new BusinessException("BRAND.EXISTS");
+			throw new BusinessException("CITY.EXISTS");
+		}
+	}
+	
+	private void checkIsCityNull(int cityId) {
+		City city = this.cityRepository.findById(cityId).get();
+		if (city == null) {
+			throw new BusinessException("THERE.IS.NOT.CITY");
 		}
 	}
 

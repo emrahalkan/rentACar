@@ -30,8 +30,8 @@ public class Address {
 	private String address;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 	
 	@Column(name ="address_type")
 	private int addressType;

@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.business.requests.users;
+package com.kodlamaio.rentACar.business.responses.individuals;
 
 import java.time.LocalDate;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateUserRequest {
+public class GetIndividualCustomerResponse {
 	private String firstName;
 	private String lastName;
 	private String nationality;

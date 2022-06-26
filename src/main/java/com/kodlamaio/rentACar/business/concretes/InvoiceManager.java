@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
+import com.kodlamaio.rentACar.business.abstracts.InvoiceCustomerService;
 import com.kodlamaio.rentACar.business.requests.invoices.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.requests.invoices.DeleteInvoiceRequest;
 import com.kodlamaio.rentACar.business.requests.invoices.UpdateInvoiceRequest;
@@ -29,7 +29,7 @@ import com.kodlamaio.rentACar.entities.concretes.Invoice;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
 
 @Service
-public class InvoiceManager implements InvoiceService {
+public class InvoiceManager implements InvoiceCustomerService {
 	
 	private InvoiceRepository invoiceRepository;
 	private ModelMapperService modelMapperService;

@@ -11,7 +11,7 @@ import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.AdditionalItem;
 
-public interface InvoiceService {
+public interface InvoiceCustomerService {
 	Result add(CreateInvoiceRequest createInvoiceRequest);
 	Result delete(DeleteInvoiceRequest deleteInvoiceRequest);
 	Result update(UpdateInvoiceRequest updateInvoiceRequest);

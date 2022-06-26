@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 
 import org.springframework.stereotype.Service;
 
-import com.kodlamaio.rentACar.business.requests.users.CreateUserRequest;
+import com.kodlamaio.rentACar.business.requests.individuals.CreateIndividualCustomerRequest;
 import com.kodlamaio.rentACar.core.utilities.adapters.abstracts.PersonCheckService;
 
 import tr.gov.nvi.tckimlik.WS.KPSPublicSoapProxy;
@@ -13,7 +13,7 @@ import tr.gov.nvi.tckimlik.WS.KPSPublicSoapProxy;
 public class MernisKpsAdapter implements PersonCheckService {
 
 	@Override
-	public boolean checkPerson(CreateUserRequest user) throws NumberFormatException, RemoteException {
+	public boolean checkPerson(CreateIndividualCustomerRequest user) throws NumberFormatException, RemoteException {
 		
 		KPSPublicSoapProxy kpsPublicSoapProxy = new KPSPublicSoapProxy();
 		boolean result = kpsPublicSoapProxy.TCKimlikNoDogrula

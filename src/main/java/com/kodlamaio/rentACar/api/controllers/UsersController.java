@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.UserService;
-import com.kodlamaio.rentACar.business.requests.users.CreateUserRequest;
-import com.kodlamaio.rentACar.business.requests.users.DeleteUserRequest;
-import com.kodlamaio.rentACar.business.requests.users.UpdateUserRequest;
-import com.kodlamaio.rentACar.business.responses.users.GetAllUsersResponse;
-import com.kodlamaio.rentACar.business.responses.users.GetUserResponse;
+import com.kodlamaio.rentACar.business.requests.individuals.CreateIndividualCustomerRequest;
+import com.kodlamaio.rentACar.business.requests.individuals.DeleteIndividualCustomerRequest;
+import com.kodlamaio.rentACar.business.requests.individuals.UpdateIndividualCustomerRequest;
+import com.kodlamaio.rentACar.business.responses.individuals.GetAllIndividualCustomerResponse;
+import com.kodlamaio.rentACar.business.responses.individuals.GetIndividualCustomerResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
@@ -28,32 +28,32 @@ public class UsersController {
 	private UserService userService;
 	
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateUserRequest createUserRequest) throws NumberFormatException, RemoteException  {
+	public Result add(@RequestBody CreateIndividualCustomerRequest createUserRequest) throws NumberFormatException, RemoteException  {
 		return this.userService.add(createUserRequest);
 	}
 	
 	@GetMapping("/getAll")
-	public DataResult<List<GetAllUsersResponse>> getAll(){
+	public DataResult<List<GetAllIndividualCustomerResponse>> getAll(){
 		return userService.getAll();
 	}
 	
 	@GetMapping("/getAllByPage")
-	public DataResult<List<GetAllUsersResponse>> getAll(@RequestParam int pageNo, int pageSize){
+	public DataResult<List<GetAllIndividualCustomerResponse>> getAll(@RequestParam int pageNo, int pageSize){
 		return userService.getAll(pageNo, pageSize);
 	}
 	
 	@GetMapping("/getById")
-	public DataResult<GetUserResponse> getById(@RequestParam int id){
+	public DataResult<GetIndividualCustomerResponse> getById(@RequestParam int id){
 		return this.userService.getById(id);
 	}
 	
 	@PostMapping("/delete")
-	public Result delete(@RequestBody DeleteUserRequest deleteUserRequest) {
+	public Result delete(@RequestBody DeleteIndividualCustomerRequest deleteUserRequest) {
 		return this.userService.delete(deleteUserRequest);
 	}
 	
 	@PostMapping("/update")
-	public Result update(@RequestBody UpdateUserRequest updateUserRequest) {
+	public Result update(@RequestBody UpdateIndividualCustomerRequest updateUserRequest) {
 		return this.userService.update(updateUserRequest);
 	}
 

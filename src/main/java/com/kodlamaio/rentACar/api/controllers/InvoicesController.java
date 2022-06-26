@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
+import com.kodlamaio.rentACar.business.abstracts.InvoiceCustomerService;
 import com.kodlamaio.rentACar.business.requests.invoices.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.requests.invoices.DeleteInvoiceRequest;
 import com.kodlamaio.rentACar.business.requests.invoices.UpdateInvoiceRequest;
@@ -25,7 +25,7 @@ import com.kodlamaio.rentACar.entities.concretes.AdditionalItem;
 public class InvoicesController {
 	
 	@Autowired
-	private InvoiceService invoiceService;
+	private InvoiceCustomerService invoiceService;
 	
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateInvoiceRequest createInvoiceRequest) {

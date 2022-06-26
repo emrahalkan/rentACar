@@ -22,7 +22,7 @@ import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
-import com.kodlamaio.rentACar.dataAccess.abstracts.UserRepository;
+import com.kodlamaio.rentACar.dataAccess.abstracts.IndividualRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
 import com.kodlamaio.rentACar.entities.concretes.User;
@@ -34,10 +34,10 @@ public class RentalManager implements RentalService {
 	private CarRepository carRepository;
 	private ModelMapperService modelMapperService;
 	private FindeksService findeksService;
-	private UserRepository userRepository;
+	private IndividualRepository userRepository;
 
 	public RentalManager(RentalRepository rentalRepository, CarRepository carRepository,
-			ModelMapperService modelMapperService, FindeksService findeksService, UserRepository userRepository) {
+			ModelMapperService modelMapperService, FindeksService findeksService, IndividualRepository userRepository) {
 		this.rentalRepository = rentalRepository;
 		this.carRepository = carRepository;
 		this.modelMapperService = modelMapperService;
