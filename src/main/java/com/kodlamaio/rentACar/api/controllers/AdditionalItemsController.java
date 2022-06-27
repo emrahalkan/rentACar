@@ -2,7 +2,6 @@ package com.kodlamaio.rentACar.api.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +21,12 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 @RequestMapping("/api/additionalItems")
 public class AdditionalItemsController {
 	
-	@Autowired
 	private AdditionalItemService additionalItemService;
 	
+	public AdditionalItemsController(AdditionalItemService additionalItemService) {
+		this.additionalItemService = additionalItemService;
+	}
+
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateAdditionalItemRequest creAdditionalItemRequest) {
 		return this.additionalItemService.add(creAdditionalItemRequest);

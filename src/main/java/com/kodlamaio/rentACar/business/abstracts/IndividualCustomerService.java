@@ -1,5 +1,6 @@
 package com.kodlamaio.rentACar.business.abstracts;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import com.kodlamaio.rentACar.business.requests.individuals.CreateIndividualCustomerRequest;
@@ -11,9 +12,10 @@ import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
 public interface IndividualCustomerService {
-	Result add(CreateIndividualCustomerRequest createCorporateCustomerRequest);
-	Result delete(DeleteIndividualCustomerRequest deleteCorporateCustomerRequest);
-	Result update(UpdateIndividualCustomerRequest updateCorporateCustomerRequest);
-	DataResult<GetIndividualCustomerResponse> getById(int id);
+	Result add(CreateIndividualCustomerRequest createUserRequest) throws NumberFormatException, RemoteException;
+	Result delete(DeleteIndividualCustomerRequest deleteUserRequest);
+	Result update(UpdateIndividualCustomerRequest updateUserRequest);
 	DataResult<List<GetAllIndividualCustomerResponse>> getAll();
+	DataResult<GetIndividualCustomerResponse> getById(int id);
+	DataResult<List<GetAllIndividualCustomerResponse>> getAll(Integer pageNo, Integer pageSize);
 }

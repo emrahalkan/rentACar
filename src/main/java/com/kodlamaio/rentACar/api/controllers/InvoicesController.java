@@ -24,9 +24,14 @@ import com.kodlamaio.rentACar.entities.concretes.AdditionalItem;
 @RequestMapping("/api/invoices")
 public class InvoicesController {
 	
-	@Autowired
+	
 	private InvoiceCustomerService invoiceService;
 	
+	@Autowired
+	public InvoicesController(InvoiceCustomerService invoiceService) {
+		this.invoiceService = invoiceService;
+	}
+
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateInvoiceRequest createInvoiceRequest) {
 		return this.invoiceService.add(createInvoiceRequest);

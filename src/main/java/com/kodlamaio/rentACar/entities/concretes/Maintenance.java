@@ -1,6 +1,6 @@
 package com.kodlamaio.rentACar.entities.concretes;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,10 +28,10 @@ public class Maintenance {
 	private int id;
 	
 	@Column(name="sent_date")
-	private Date sentDate;
+	private LocalDate sentDate;
 	
 	@Column(name="returned_date")
-	private Date returnedDate;
+	private LocalDate returnedDate;
 	
 	@ManyToOne
 	@JoinColumn(name="car_id")

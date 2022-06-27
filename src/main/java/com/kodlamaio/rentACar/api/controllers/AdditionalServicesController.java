@@ -23,9 +23,13 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 @RequestMapping("/api/additionalService")
 public class AdditionalServicesController {
 	
-	@Autowired
 	private AdditionalServiceService additionalServiceService;
 	
+	@Autowired
+	public AdditionalServicesController(AdditionalServiceService additionalServiceService) {
+		this.additionalServiceService = additionalServiceService;
+	}
+
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateAdditionalServiceRequest createAdditionalServiceRequest) {
 		return this.additionalServiceService.add(createAdditionalServiceRequest);

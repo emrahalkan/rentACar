@@ -1,6 +1,6 @@
 package com.kodlamaio.rentACar.business.requests.maintenances;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateMaintenanceRequest {
-	private Date sentDate;
-	private Date returnedDate;
+	private LocalDate sentDate;
+	private LocalDate returnedDate;
 	private int carId;
 }

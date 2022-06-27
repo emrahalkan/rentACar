@@ -32,9 +32,9 @@ public class City {
 	@OneToMany(mappedBy = "city")
 	List<Car> cars;
 	
-	@OneToMany(mappedBy = "pickup_city_id")
+	@OneToMany(mappedBy = "pickupCityId")
 	List<Rental> pickupCityRentals;
 	
-	@OneToMany(mappedBy = "return_city_id")
+	@OneToMany(mappedBy = "returnCityId")
 	List<Rental> returnCityRentals;
 }

@@ -2,7 +2,6 @@ package com.kodlamaio.rentACar.api.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +21,13 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/addresses")
 public class AddressesController {
-	@Autowired
+	
 	private AddressService addressService;
 	
+	public AddressesController(AddressService addressService) {
+		this.addressService = addressService;
+	}
+
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateAddressRequest createAddressRequest) {
 		return this.addressService.add(createAddressRequest);

@@ -20,17 +20,15 @@ import com.kodlamaio.rentACar.dataAccess.abstracts.AddressRepository;
 import com.kodlamaio.rentACar.entities.concretes.Address;
 
 @Service
-public class AddressManager implements AddressService{
+public class AddressManager implements AddressService {
 	private AddressRepository addressRepository;
 	private ModelMapperService modelMapperService;
-	//private UserRepository userRepository;
-	
-	
-	public AddressManager(AddressRepository addressRepository, ModelMapperService modelMapperService
-			) {
+	// private UserRepository userRepository;
+
+	public AddressManager(AddressRepository addressRepository, ModelMapperService modelMapperService) {
 		this.addressRepository = addressRepository;
 		this.modelMapperService = modelMapperService;
-		//this.userRepository = userRepository;
+		// this.userRepository = userRepository;
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class AddressManager implements AddressService{
 	@Override
 	public DataResult<List<GetAllAddressesResponse>> getAll() {
 		List<Address> getAllAddressesResponses = this.addressRepository.findAll();
-		
+
 		List<GetAllAddressesResponse> response = getAllAddressesResponses.stream()
 				.map(address -> this.modelMapperService.forResponse().map(address, GetAllAddressesResponse.class))
 				.collect(Collectors.toList());
@@ -66,30 +64,28 @@ public class AddressManager implements AddressService{
 	@Override
 	public DataResult<GetAddressResponse> getById(int id) {
 		Address address = this.addressRepository.findById(id).get();
-		
-		GetAddressResponse getAddressResponse = this.modelMapperService.forResponse().map(address, GetAddressResponse.class);
-		
-		return new SuccessDataResult<GetAddressResponse>(getAddressResponse,"GET.ADDRESS");
+
+		GetAddressResponse getAddressResponse = this.modelMapperService.forResponse().map(address,
+				GetAddressResponse.class);
+
+		return new SuccessDataResult<GetAddressResponse>(getAddressResponse, "GET.ADDRESS");
 	}
 
 	@Override
 	public DataResult<List<GetAllAddressesResponse>> getAllBillAddress(int userId, int addressType) {
-		List<Address> addresses = this.addressRepository.getByUserIdAndAddressType(userId, addressType);
+		List<Address> addresses = this.addressRepository.getByCustomerIdAndAddressType(userId, addressType);
 		List<GetAllAddressesResponse> response = addresses.stream()
-				.map(address -> this.modelMapperService.forResponse()
-				.map(address, GetAllAddressesResponse.class))
+				.map(address -> this.modelMapperService.forResponse().map(address, GetAllAddressesResponse.class))
 				.collect(Collectors.toList());
 		return new SuccessDataResult<List<GetAllAddressesResponse>>(response);
 	}
 
 	@Override
 	public DataResult<List<GetAllAddressesResponse>> getAllContactAddress(int userId, int addressType) {
-		List<Address> addresses = this.addressRepository.getByUserIdAndAddressType(userId, addressType);
+		List<Address> addresses = this.addressRepository.getByCustomerIdAndAddressType(userId, addressType);
 		List<GetAllAddressesResponse> response = addresses.stream()
-				.map(address -> this.modelMapperService.forResponse()
-				.map(address, GetAllAddressesResponse.class))
+				.map(address -> this.modelMapperService.forResponse().map(address, GetAllAddressesResponse.class))
 				.collect(Collectors.toList());
 		return new SuccessDataResult<List<GetAllAddressesResponse>>(response);
 	}
-	
 }

@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @PrimaryKeyJoinColumn(name = "customer_id", referencedColumnName = "id")
 public class Customer extends User {
-
+	
 	@Column(name ="customer_id", insertable = false, updatable = false)
 	private int customerId;
 	

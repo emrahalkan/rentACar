@@ -21,11 +21,11 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
+import com.kodlamaio.rentACar.dataAccess.abstracts.IndividualCustomerRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
-import com.kodlamaio.rentACar.dataAccess.abstracts.IndividualRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
+import com.kodlamaio.rentACar.entities.concretes.IndividualCustomer;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
-import com.kodlamaio.rentACar.entities.concretes.User;
 
 @Service
 public class RentalManager implements RentalService {
@@ -34,15 +34,15 @@ public class RentalManager implements RentalService {
 	private CarRepository carRepository;
 	private ModelMapperService modelMapperService;
 	private FindeksService findeksService;
-	private IndividualRepository userRepository;
+	private IndividualCustomerRepository individualCustomerRepository;
 
 	public RentalManager(RentalRepository rentalRepository, CarRepository carRepository,
-			ModelMapperService modelMapperService, FindeksService findeksService, IndividualRepository userRepository) {
+			ModelMapperService modelMapperService, FindeksService findeksService, IndividualCustomerRepository individualCustomerRepository) {
 		this.rentalRepository = rentalRepository;
 		this.carRepository = carRepository;
 		this.modelMapperService = modelMapperService;
 		this.findeksService = findeksService;
-		this.userRepository = userRepository;
+		this.individualCustomerRepository = individualCustomerRepository;
 	}
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
@@ -150,7 +150,7 @@ public class RentalManager implements RentalService {
 	
 	private void checkUserFindexScore(CreateRentalRequest createRentalRequest) {
 		Car car = this.carRepository.findById(createRentalRequest.getCarId()).get();
-		User user = this.userRepository.findById(createRentalRequest.getUserId()).get();
+		IndividualCustomer user = this.individualCustomerRepository.findById(createRentalRequest.getUserId()).get();
 		if(findeksService.checkPerson(user.getNationality()) > car.getMinFindexScore()) {
 			throw new BusinessException("USER.IS.NOT.ENOUGH.FINDEX.SCORE");
 		}
