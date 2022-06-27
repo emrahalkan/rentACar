@@ -35,7 +35,7 @@ public class CarsController {
 	}
 	
 	@PostMapping("/delete")
-	public Result delete(@RequestParam DeleteCarRequest deleteCarRequest) {
+	public Result delete(@RequestBody DeleteCarRequest deleteCarRequest) {
 		return this.carService.delete(deleteCarRequest);
 	}
 	

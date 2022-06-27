@@ -25,6 +25,6 @@ public class CreateCarRequest{
 	private int colorId;
 	private String numberPlate;
 	private int kilometer;
-	private String cityId;
+	private int cityId;
 	private int minFindexScore;
 }

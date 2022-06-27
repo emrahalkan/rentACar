@@ -16,4 +16,5 @@ public interface CorporateCustomerService {
 	Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest);
 	DataResult<GetCorporateCustomerResponse> getById(int id);
 	DataResult<List<GetAllCorporateCustomerResponse>> getAll();
+	DataResult<List<GetAllCorporateCustomerResponse>> getAll(Integer pageNo, Integer pageSize);
 }

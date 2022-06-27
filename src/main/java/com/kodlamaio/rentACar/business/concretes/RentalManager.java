@@ -54,7 +54,7 @@ public class RentalManager implements RentalService {
 		int diffDate = (int) ChronoUnit.DAYS.between(rental.getPickupDate(), rental.getReturnDate());
 		rental.setTotalDays(diffDate);
 		
-		Car car = this.carRepository.findById(createRentalRequest.getCarId()).get();
+		Car car = this.carRepository.findById(createRentalRequest.getCarId());
 		double totalPrice = calculateTotalPrice(rental, car.getDailyPrice());
 	
 		car.setState(3);
@@ -67,7 +67,7 @@ public class RentalManager implements RentalService {
 	}
 	@Override
 	public Result delete(DeleteRentalRequest deleteRentalRequest) {
-		Rental rental = this.rentalRepository.findById(deleteRentalRequest.getId()).get();
+		Rental rental = this.rentalRepository.findById(deleteRentalRequest.getId());
 		this.rentalRepository.delete(rental);
 		return new SuccessResult("RENTAL.DELETED");
 	}
@@ -82,7 +82,7 @@ public class RentalManager implements RentalService {
 		int diffDate = (int) ChronoUnit.DAYS.between(rental.getPickupDate(), rental.getReturnDate());
 		rental.setTotalDays(diffDate);
 		
-		Car car = this.carRepository.findById(updateRentalRequest.getCarId()).get();
+		Car car = this.carRepository.findById(updateRentalRequest.getCarId());
 		double totalPrice = calculateTotalPrice(rental, car.getDailyPrice());
 	
 		rental.setPickupCityId(car.getCity());
@@ -93,7 +93,7 @@ public class RentalManager implements RentalService {
 	}
 
 	public Result updateState(UpdateRentalRequest updateRentalRequest) {
-		Car car = carRepository.findById(updateRentalRequest.getCarId()).get();
+		Car car = carRepository.findById(updateRentalRequest.getCarId());
 		if (car.getState() == 1) {
 			car.setState(3);
 		} else {
@@ -105,7 +105,7 @@ public class RentalManager implements RentalService {
 
 	@Override
 	public DataResult<GetRentalResponse> getById(int id) {
-		Rental rental = this.rentalRepository.findById(id).get();
+		Rental rental = this.rentalRepository.findById(id);
 		GetRentalResponse response = this.modelMapperService.forResponse().map(rental, GetRentalResponse.class);
 		return new SuccessDataResult<GetRentalResponse>(response);
 	}
@@ -121,7 +121,7 @@ public class RentalManager implements RentalService {
 	}
 
 	private void checkIfCarState(int id) {
-		Car car = this.carRepository.findById(id).get();
+		Car car = this.carRepository.findById(id);
 		if (car.getState() == 2 || car.getState() == 3) {
 			throw new BusinessException("CAR.IS.NOT.AVAIBLE");
 		}
@@ -149,8 +149,8 @@ public class RentalManager implements RentalService {
 	}
 	
 	private void checkUserFindexScore(CreateRentalRequest createRentalRequest) {
-		Car car = this.carRepository.findById(createRentalRequest.getCarId()).get();
-		IndividualCustomer user = this.individualCustomerRepository.findById(createRentalRequest.getUserId()).get();
+		Car car = this.carRepository.findById(createRentalRequest.getCarId());
+		IndividualCustomer user = this.individualCustomerRepository.findById(createRentalRequest.getUserId());
 		if(findeksService.checkPerson(user.getNationality()) > car.getMinFindexScore()) {
 			throw new BusinessException("USER.IS.NOT.ENOUGH.FINDEX.SCORE");
 		}

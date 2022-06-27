@@ -69,7 +69,7 @@ public class ColorManager implements ColorService {
 	@Override
 	public DataResult<GetColorResponse> getById(int id) {
 		checkIsColorNull(id);
-		Color color = this.colorRepository.findById(id).get();
+		Color color = this.colorRepository.findById(id);
 
 		GetColorResponse response = this.modelMapperService.forResponse().map(color, GetColorResponse.class);
 		return new SuccessDataResult<GetColorResponse>(response);
@@ -83,7 +83,7 @@ public class ColorManager implements ColorService {
 	}
 
 	private void checkIsColorNull(int colorId) {
-		Color color = this.colorRepository.findById(colorId).get();
+		Color color = this.colorRepository.findById(colorId);
 		if (color == null) {
 			throw new BusinessException("THERE.IS.NOT.COLOR");
 		}

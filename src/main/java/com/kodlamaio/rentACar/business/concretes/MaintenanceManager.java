@@ -43,7 +43,7 @@ public class MaintenanceManager implements MaintenanceService {
 		checkCarIdFromMaintenance(createMaintenanceRequest.getCarId());
 		Maintenance maintenance = this.modelMapperService.forRequest().map(createMaintenanceRequest, Maintenance.class);
 
-		Car car = this.carRepository.findById(createMaintenanceRequest.getCarId()).get();
+		Car car = this.carRepository.findById(createMaintenanceRequest.getCarId());
 		car.setState(2);
 
 		maintenanceRepository.save(maintenance);
@@ -53,7 +53,7 @@ public class MaintenanceManager implements MaintenanceService {
 	@Override
 	public Result delete(DeleteMaintenanceRequest deleteMaintenanceRequest) {
 		checkIsMaintenanceExists(deleteMaintenanceRequest.getId());
-		Maintenance maintenance = this.maintenanceRepository.findById(deleteMaintenanceRequest.getId()).get();
+		Maintenance maintenance = this.maintenanceRepository.findById(deleteMaintenanceRequest.getId());
 		this.maintenanceRepository.delete(maintenance);
 		return new SuccessResult("MAINTENANCE.DELETED");
 	}
@@ -61,6 +61,10 @@ public class MaintenanceManager implements MaintenanceService {
 	@Override
 	public Result update(UpdateMaintenanceRequest updateMaintenanceRequest) {
 		checkIsMaintenanceExists(updateMaintenanceRequest.getId());
+		Maintenance oldMaintenance = this.maintenanceRepository.findById(updateMaintenanceRequest.getId());
+		Car car = this.carRepository.findById(updateMaintenanceRequest.getCarId());
+		car.setState(2);
+		checkCarChangeInUpdate(updateMaintenanceRequest.getId(), oldMaintenance.getId());
 		Maintenance maintenance = this.modelMapperService.forRequest().map(updateMaintenanceRequest, Maintenance.class);
 		maintenanceRepository.save(maintenance);
 		return new SuccessResult("MAINTENANCE.UPDATED");
@@ -68,7 +72,7 @@ public class MaintenanceManager implements MaintenanceService {
 
 	@Override
 	public Result updateState(int carId) {
-		Car car = carRepository.findById(carId).get();
+		Car car = carRepository.findById(carId);
 		if (car.getState() == 1) {
 			car.setState(2);
 		} else {
@@ -81,11 +85,10 @@ public class MaintenanceManager implements MaintenanceService {
 	@Override
 	public DataResult<GetMaintenanceResponse> getById(int id) {
 		checkIsMaintenanceExists(id);
-		Maintenance maintenance = this.maintenanceRepository.findById(id).get();
+		Maintenance maintenance = this.maintenanceRepository.findById(id);
 		GetMaintenanceResponse response = this.modelMapperService.forResponse().map(maintenance,
 				GetMaintenanceResponse.class);
 		return new SuccessDataResult<GetMaintenanceResponse>(response);
-
 	}
 
 	@Override
@@ -99,29 +102,40 @@ public class MaintenanceManager implements MaintenanceService {
 	}
 
 	private void checkCarUnderMaintenance(int carId) {
-		Car car = this.carRepository.findById(carId).get();
+		Car car = this.carRepository.findById(carId);
 		if (car.getState() == 2) {
 			throw new BusinessException("CAR.IS.ALREADY.MAINTENANCE.NOW");
 		}
 	}
-	
+
 	private void checkIsMaintenanceExists(int id) {
-		Maintenance maintenance = this.maintenanceRepository.findById(id).get();
+		Maintenance maintenance = this.maintenanceRepository.findById(id);
 		if (maintenance == null) {
 			throw new BusinessException("THERE.IS.NOT.MAINTENANCE");
 		}
 	}
-	
+
 	private void checkDateToMaintenance(LocalDate pickupDate, LocalDate returnDate) {
 		if (!pickupDate.isBefore(returnDate) || pickupDate.isBefore(LocalDate.now())) {
 			throw new BusinessException("PICKUPDATE.AND.RETURNDATE.ERROR");
 		}
 	}
-	
+
 	private void checkCarIdFromMaintenance(int carId) {
-		Car car = this.carRepository.findById(carId).get();
+		Car car = this.carRepository.findById(carId);
 		if (car == null) {
 			throw new BusinessException("THIS.CAR.IS.NOT.IN.CAR.REPOSITORY");
+		}
+	}
+
+	private void checkCarChangeInUpdate(int newMaintenanceId, int oldMaintenanceId) {
+		Maintenance newMaintenance = this.maintenanceRepository.findById(newMaintenanceId);
+		Maintenance oldMaintenance = this.maintenanceRepository.findById(oldMaintenanceId);
+
+		if (newMaintenance.getCar().getId() != oldMaintenance.getCar().getId()) {
+			Car car = this.carRepository.findById(oldMaintenance.getCar().getId());
+			car.setState(1);
+			this.carRepository.save(car);
 		}
 	}
 }

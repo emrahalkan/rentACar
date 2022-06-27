@@ -3,6 +3,8 @@ package com.kodlamaio.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.CorporateCustomerService;
@@ -60,7 +62,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	@Override
 	public DataResult<GetCorporateCustomerResponse> getById(int id) {
 		checkCorporateExists(id);
-		CorporateCustomer corporateCustomer = this.corporateCustomerRepository.findById(id).get();
+		CorporateCustomer corporateCustomer = this.corporateCustomerRepository.findById(id);
 		
 		GetCorporateCustomerResponse response = this.modelMapperService.forResponse().map(corporateCustomer, GetCorporateCustomerResponse.class);
 		
@@ -76,6 +78,17 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 				.collect(Collectors.toList());
 		return new SuccessDataResult<List<GetAllCorporateCustomerResponse>>(response,"CORPORATE.LISTED");
 	}
+	
+	@Override
+	public DataResult<List<GetAllCorporateCustomerResponse>> getAll(Integer pageNo, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		List<CorporateCustomer> users = this.corporateCustomerRepository.findAll(pageable).getContent();
+
+		List<GetAllCorporateCustomerResponse> response = users.stream()
+				.map(user -> this.modelMapperService.forResponse().map(user, GetAllCorporateCustomerResponse.class))
+				.collect(Collectors.toList());
+		return new SuccessDataResult<List<GetAllCorporateCustomerResponse>>(response);
+	}
 
 	private void checkCorporateExistsTaxNumber(String taxNumber) {
 		CorporateCustomer corporateCustomer = this.corporateCustomerRepository.findByTaxNumber(taxNumber);
@@ -85,10 +98,11 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 
 	private void checkCorporateExists(int id) {
-		CorporateCustomer corporateCustomer = this.corporateCustomerRepository.findById(id).get();
+		CorporateCustomer corporateCustomer = this.corporateCustomerRepository.findById(id);
 		if (corporateCustomer == null) {
 			throw new BusinessException("CORPORATE.WAS.NOT.FOUND");
 		}
 	}
+
 
 }

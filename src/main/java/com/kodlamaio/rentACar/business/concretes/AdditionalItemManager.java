@@ -57,7 +57,7 @@ public class AdditionalItemManager implements AdditionalItemService{
 
 	@Override
 	public DataResult<GetAdditionalItemResponse> getById(int id) {
-		AdditionalItem additionalItem = this.additionalItemRepository.findById(id).get();
+		AdditionalItem additionalItem = this.additionalItemRepository.findById(id);
 		
 		GetAdditionalItemResponse response = this.modelMapperService.forResponse().map(additionalItem, GetAdditionalItemResponse.class);
 		return new SuccessDataResult<GetAdditionalItemResponse>(response);

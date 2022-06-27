@@ -67,7 +67,7 @@ public class CityManager implements CityService {
 	@Override
 	public DataResult<GetCityResponse> getById(int id) {
 		checkIsCityNull(id);
-		City city = this.cityRepository.findById(id).get();
+		City city = this.cityRepository.findById(id);
 		GetCityResponse response = this.modelMapperService.forResponse().map(city, GetCityResponse.class);
 		return new SuccessDataResult<GetCityResponse>(response);
 	}
@@ -80,7 +80,7 @@ public class CityManager implements CityService {
 	}
 	
 	private void checkIsCityNull(int cityId) {
-		City city = this.cityRepository.findById(cityId).get();
+		City city = this.cityRepository.findById(cityId);
 		if (city == null) {
 			throw new BusinessException("THERE.IS.NOT.CITY");
 		}

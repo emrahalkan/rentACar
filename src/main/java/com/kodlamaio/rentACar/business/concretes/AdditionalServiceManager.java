@@ -43,10 +43,10 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 	public Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest) {
 		AdditionalService additionalService = this.modelMapperService.forRequest().map(createAdditionalServiceRequest, AdditionalService.class);
 		
-		int rentalTotalDays = this.rentalRepository.findById(createAdditionalServiceRequest.getRentalId()).get().getTotalDays();
+		int rentalTotalDays = this.rentalRepository.findById(createAdditionalServiceRequest.getRentalId()).getTotalDays();
 		additionalService.setTotalDays(rentalTotalDays);
 		
-		double additionalItemPrice = this.additionalItemRepository.findById(createAdditionalServiceRequest.getAdditionalItemId()).get().getPrice();
+		double additionalItemPrice = this.additionalItemRepository.findById(createAdditionalServiceRequest.getAdditionalItemId()).getPrice();
 		double totalPrice = calculateTotalPriceAdditionalService(rentalTotalDays, additionalItemPrice);
 		additionalService.setTotalPrice(totalPrice);
 		
@@ -66,11 +66,11 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 		AdditionalService additionalService = this.modelMapperService.forRequest()
 				.map(updateAdditionalServiceRequest, AdditionalService.class);
 		
-		Rental rental = this.rentalRepository.findById(updateAdditionalServiceRequest.getRentalId()).get();
+		Rental rental = this.rentalRepository.findById(updateAdditionalServiceRequest.getRentalId());
 		int rentalTotalDays = rental.getTotalDays();
 		additionalService.setTotalDays(rentalTotalDays);
 		
-		double additionalItemPrice = this.additionalItemRepository.findById(updateAdditionalServiceRequest.getAdditionalItemId()).get().getPrice();
+		double additionalItemPrice = this.additionalItemRepository.findById(updateAdditionalServiceRequest.getAdditionalItemId()).getPrice();
 		double totalPrice = calculateTotalPriceAdditionalService(rentalTotalDays, additionalItemPrice);
 		additionalService.setTotalPrice(totalPrice);
 		
@@ -80,7 +80,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
 	@Override
 	public DataResult<GetAdditionalServiceResponse> getById(int id) {
-		AdditionalService additionalService = this.additionalServiceRepository.findById(id).get();
+		AdditionalService additionalService = this.additionalServiceRepository.findById(id);
 		
 		GetAdditionalServiceResponse response = this.modelMapperService.forResponse()
 				.map(additionalService, GetAdditionalServiceResponse.class);

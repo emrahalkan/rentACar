@@ -53,7 +53,7 @@ public class BrandManager implements BrandService {
 	@Override
 	public DataResult<GetBrandResponse> getById(int id) {
 		checkIsBrandNull(id);
-		Brand brand = this.brandRepository.findById(id).get();
+		Brand brand = this.brandRepository.findById(id);
 		
 		GetBrandResponse response = this.modelMapperService.forResponse().map(brand, GetBrandResponse.class);
 		return new SuccessDataResult<GetBrandResponse>(response);
@@ -83,7 +83,7 @@ public class BrandManager implements BrandService {
 	}
 	
 	private void checkIsBrandNull(int brandId) {
-		Brand brand = this.brandRepository.findById(brandId).get();
+		Brand brand = this.brandRepository.findById(brandId);
 		if (brand == null) {
 			throw new BusinessException("THERE.IS.NOT.BRAND");
 		}

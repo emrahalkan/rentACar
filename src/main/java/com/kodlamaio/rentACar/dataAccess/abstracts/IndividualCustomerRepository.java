@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.kodlamaio.rentACar.entities.concretes.IndividualCustomer;
 
 public interface IndividualCustomerRepository extends JpaRepository<IndividualCustomer, Integer> {
+	IndividualCustomer findById(int id);
 	IndividualCustomer findByNationality(String nationality);
 	IndividualCustomer findByEmail(String email);
 }

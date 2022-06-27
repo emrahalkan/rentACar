@@ -17,23 +17,42 @@ import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
+import com.kodlamaio.rentACar.dataAccess.abstracts.BrandRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
+import com.kodlamaio.rentACar.dataAccess.abstracts.CityRepository;
+import com.kodlamaio.rentACar.dataAccess.abstracts.ColorRepository;
+import com.kodlamaio.rentACar.entities.concretes.Brand;
 import com.kodlamaio.rentACar.entities.concretes.Car;
+import com.kodlamaio.rentACar.entities.concretes.City;
+import com.kodlamaio.rentACar.entities.concretes.Color;
 
 @Service
 public class CarManager implements CarService {
 
 	private CarRepository carRepository;
 	private ModelMapperService modelMapperService;
+	private CityRepository cityRepository;
+	private BrandRepository brandRepository;
+	private ColorRepository colorRepository;
 
-	public CarManager(CarRepository carRepository, ModelMapperService modelMapperService) {
+	
+
+	public CarManager(CarRepository carRepository, ModelMapperService modelMapperService, CityRepository cityRepository,
+			BrandRepository brandRepository, ColorRepository colorRepository) {
 		this.carRepository = carRepository;
 		this.modelMapperService = modelMapperService;
+		this.cityRepository = cityRepository;
+		this.brandRepository = brandRepository;
+		this.colorRepository = colorRepository;
 	}
 
 	@Override
 	public Result add(CreateCarRequest createCarRequest) {
 		checkBrandCount(createCarRequest.getBrandId());
+		checkCarNumberPlate(createCarRequest.getNumberPlate());
+		checkColorExists(createCarRequest.getColorId());
+		checkCityExists(createCarRequest.getCityId());
+		checkBrandExists(createCarRequest.getBrandId());
 		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
 		car.setState(1);
 		this.carRepository.save(car);
@@ -51,8 +70,12 @@ public class CarManager implements CarService {
 	@Override
 	public Result update(UpdateCarRequest updateCarRequest) {
 		checkIfCarExists(updateCarRequest.getId());
-		Car car = this.carRepository.findById(updateCarRequest.getId()).get();
+		checkColorExists(updateCarRequest.getColorId());
+		checkCityExists(updateCarRequest.getCityId());
+		checkBrandExists(updateCarRequest.getBrandId());
+		Car car = this.carRepository.findById(updateCarRequest.getId());
 		checkBrandNameFromUpdate(car);
+		checkCarNumberPlateFromUpdate(car);
 		car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
 		this.carRepository.save(car);
 
@@ -62,7 +85,7 @@ public class CarManager implements CarService {
 	@Override
 	public DataResult<GetCarResponse> getById(int id) {
 		checkIfCarExists(id);
-		Car car = this.carRepository.findById(id).get();
+		Car car = this.carRepository.findById(id);
 
 		GetCarResponse response = this.modelMapperService.forResponse().map(car, GetCarResponse.class);
 		return new SuccessDataResult<GetCarResponse>(response);
@@ -79,7 +102,7 @@ public class CarManager implements CarService {
 	}
 	
 	private void checkBrandNameFromUpdate(Car newCar) {
-		Car oldCar = this.carRepository.findById(newCar.getId()).get();
+		Car oldCar = this.carRepository.findById(newCar.getId());
 		if (oldCar.getBrand().getId() != newCar.getBrand().getId()) {
 			checkBrandCount(newCar.getBrand().getId());
 		}
@@ -93,9 +116,44 @@ public class CarManager implements CarService {
 	}
 	
 	private void checkIfCarExists(int carId) {
-		Car car = this.carRepository.findById(carId).get();
+		Car car = this.carRepository.findById(carId);
 		if (car == null) {
 			throw new BusinessException("THERE.IS.NOT.CAR");
+		}
+	}
+	
+	private void checkColorExists(int colorId) {
+		Color color = this.colorRepository.findById(colorId);
+		if (color == null) {
+			throw new BusinessException("THERE.IS.NOT.COLOR");
+		}
+	}
+	
+	private void checkCityExists(int cityId) {
+		City city = this.cityRepository.findById(cityId);
+		if (city == null) {
+			throw new BusinessException("THERE.IS.NOT.CITY");
+		}
+	}
+	
+	private void checkBrandExists(int brandId) {
+		Brand brand = this.brandRepository.findById(brandId);
+		if (brand == null) {
+			throw new BusinessException("THERE.IS.NOT.BRAND");
+		}
+	}
+	
+	private void checkCarNumberPlate(String numberPlate) {
+		Car car = this.carRepository.findByNumberPlate(numberPlate);
+		if (car != null) {
+			throw new BusinessException("CAR.ALREADY.EXISTS");
+		}
+	}
+	
+	private void checkCarNumberPlateFromUpdate(Car newCar) {
+		Car oldCar = this.carRepository.findById(newCar.getId());
+		if (oldCar.getNumberPlate() != (newCar.getNumberPlate())) {
+			checkCarNumberPlate(newCar.getNumberPlate());
 		}
 	}
 }

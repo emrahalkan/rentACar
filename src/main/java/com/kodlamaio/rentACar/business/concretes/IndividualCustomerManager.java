@@ -82,7 +82,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	@Override
 	public DataResult<GetIndividualCustomerResponse> getById(int id) {
 		checkIfUserExists(id);
-		IndividualCustomer user = this.individualCustomerRepository.findById(id).get();
+		IndividualCustomer user = this.individualCustomerRepository.findById(id);
 
 		GetIndividualCustomerResponse response = this.mapperService.forResponse().map(user,
 				GetIndividualCustomerResponse.class);
@@ -115,7 +115,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	}
 
 	private void checkIfUserExists(int id) {
-		IndividualCustomer user = this.individualCustomerRepository.findById(id).get();
+		IndividualCustomer user = this.individualCustomerRepository.findById(id);
 		if (user == null) {
 			throw new BusinessException("THERE.IS.NOT.USER");
 		}
@@ -129,7 +129,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	}
 	
 	private void checkUserUpdateEmail(int userId, String email) {
-		IndividualCustomer user = this.individualCustomerRepository.findById(userId).get();
+		IndividualCustomer user = this.individualCustomerRepository.findById(userId);
 		
 		if (user.getEmail() != email) {
 			checkUserEmail(email);

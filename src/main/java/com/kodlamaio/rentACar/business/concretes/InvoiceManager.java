@@ -74,7 +74,7 @@ public class InvoiceManager implements InvoiceCustomerService {
 
 	@Override
 	public DataResult<GetInvoiceResponse> getById(int id) {
-		Invoice invoice = this.invoiceRepository.findById(id).get();
+		Invoice invoice = this.invoiceRepository.findById(id);
 		GetInvoiceResponse response = this.modelMapperService.forResponse().map(invoice, GetInvoiceResponse.class);
 		return new SuccessDataResult<GetInvoiceResponse>(response, "GET.INVOICE");
 	}
@@ -90,7 +90,7 @@ public class InvoiceManager implements InvoiceCustomerService {
 	}
 	
 	private double calculateTotalPrice(int rentalId) {
-		Rental rental = this.rentalRepository.findById(rentalId).get();
+		Rental rental = this.rentalRepository.findById(rentalId);
 		double totalPrice = rental.getTotalPrice() + allRentalAdditionalTotalPrice(rentalId);
 		return totalPrice;
 	}
@@ -110,7 +110,7 @@ public class InvoiceManager implements InvoiceCustomerService {
 		List<AdditionalItem> additionalItems = new ArrayList<AdditionalItem>();
 		
 		for (AdditionalService additionalService : additionalServices) {
-			AdditionalItem additionalItem = this.additionalItemRepository.findById(additionalService.getAdditionalItem().getId()).get();
+			AdditionalItem additionalItem = this.additionalItemRepository.findById(additionalService.getAdditionalItem().getId());
 			additionalItems.add(additionalItem);
 		}
 		return new SuccessDataResult<List<AdditionalItem>>(additionalItems);

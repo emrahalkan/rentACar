@@ -63,7 +63,7 @@ public class AddressManager implements AddressService {
 
 	@Override
 	public DataResult<GetAddressResponse> getById(int id) {
-		Address address = this.addressRepository.findById(id).get();
+		Address address = this.addressRepository.findById(id);
 
 		GetAddressResponse getAddressResponse = this.modelMapperService.forResponse().map(address,
 				GetAddressResponse.class);
