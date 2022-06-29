@@ -37,6 +37,9 @@ public class Invoice {
 	@Column(name = "total_price")
 	private double totalPrice;
 	
+	@Column(name = "deleted")
+	private int deleted;
+	
 	@ManyToOne
 	@JoinColumn(name ="rental_id")
 	private Rental rental;

@@ -10,25 +10,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kodlamaio.rentACar.business.abstracts.InvoiceCustomerService;
+import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
 import com.kodlamaio.rentACar.business.requests.invoices.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.requests.invoices.DeleteInvoiceRequest;
-import com.kodlamaio.rentACar.business.requests.invoices.UpdateInvoiceRequest;
 import com.kodlamaio.rentACar.business.responses.invoices.GetAllInvoicesResponse;
 import com.kodlamaio.rentACar.business.responses.invoices.GetInvoiceResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.AdditionalItem;
+import com.kodlamaio.rentACar.entities.concretes.Rental;
 
 @RestController
 @RequestMapping("/api/invoices")
 public class InvoicesController {
 	
 	
-	private InvoiceCustomerService invoiceService;
+	private InvoiceService invoiceService;
 	
 	@Autowired
-	public InvoicesController(InvoiceCustomerService invoiceService) {
+	public InvoicesController(InvoiceService invoiceService) {
 		this.invoiceService = invoiceService;
 	}
 
@@ -42,11 +42,6 @@ public class InvoicesController {
 		return this.invoiceService.delete(deleteInvoiceRequest);
 	}
 	
-	@PostMapping("/update")
-	public Result update(@RequestBody UpdateInvoiceRequest updateInvoiceRequest) {
-		return this.invoiceService.update(updateInvoiceRequest);
-	}
-	
 	@GetMapping("/getById")
 	public DataResult<GetInvoiceResponse> getById(int id){
 		return this.invoiceService.getById(id);
@@ -58,7 +53,12 @@ public class InvoicesController {
 	}
 	
 	@GetMapping("/getAllAdditionalItems")
-	public DataResult<List<AdditionalItem>> getAllAdditionalItems(@RequestParam int rentalId) {
-		return this.invoiceService.getAllAdditionalItems(rentalId);
+	public DataResult<List<AdditionalItem>> getAllAdditionalItems(@RequestParam int additionalId) {
+		return this.invoiceService.getAllAdditionalItems(additionalId);
+	}
+	
+	@GetMapping("/getJustRental")
+	public DataResult<Rental> getJustRental(@RequestParam int rentalId) {
+		return this.invoiceService.getJustRental(rentalId);
 	}
 }

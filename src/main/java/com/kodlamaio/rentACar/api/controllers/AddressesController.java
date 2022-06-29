@@ -28,14 +28,24 @@ public class AddressesController {
 		this.addressService = addressService;
 	}
 
-	@PostMapping("/add")
-	public Result add(@RequestBody CreateAddressRequest createAddressRequest) {
-		return this.addressService.add(createAddressRequest);
+	@PostMapping("/addIndividualCustomer")
+	public Result addIndividualCustomer(@RequestBody CreateAddressRequest createAddressRequest) {
+		return this.addressService.addIndividualCustomer(createAddressRequest);
+	}
+	@PostMapping("/addCorporateCustomer")
+	public Result addCorporateCustomer(@RequestBody CreateAddressRequest createAddressRequest) {
+		return this.addressService.addCorporateCustomer(createAddressRequest);
 	}
 	
-	@PostMapping("/update")
-	public Result update(@RequestBody UpdateAddressRequest updateAddressRequest) {
-		return this.addressService.update(updateAddressRequest);
+	
+	@PostMapping("/updateIndividualCustomer")
+	public Result updateIndividualCustomer(@RequestBody UpdateAddressRequest updateAddressRequest) {
+		return this.addressService.updateIndividualCustomer(updateAddressRequest);
+	}
+	
+	@PostMapping("/updateCorporateCustomer")
+	public Result updateCorporateCustomer(@RequestBody UpdateAddressRequest updateAddressRequest) {
+		return this.addressService.updateCorporateCustomer(updateAddressRequest);
 	}
 	
 	@PostMapping("/delete")
@@ -53,15 +63,9 @@ public class AddressesController {
 		return this.addressService.getAll();
 	}
 	
-	@GetMapping("getAllBillAddress")
+	@GetMapping("getAllByAddressType")
 	public DataResult<List<GetAllAddressesResponse>> getAllBillAddress(@RequestParam int userId, int addressType){
-		return this.addressService.getAllBillAddress(userId, addressType);
+		return this.addressService.getAllByAddressType(userId, addressType);
 	}
-	
-	@GetMapping("getAllContactAddress")
-	public DataResult<List<GetAllAddressesResponse>> getAllContactAddress(@RequestParam int userId, int addressType){
-		return this.addressService.getAllContactAddress(userId, addressType);
-	}
-	
 	
 }

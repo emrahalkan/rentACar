@@ -143,4 +143,22 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 			checkUserNationalityFromRepository(newIndividualCustomer.getNationality());
 		}
 	}
+
+	@Override
+	public IndividualCustomer findIndividualById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IndividualCustomer findIndividualByNationality(String nationality) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IndividualCustomer findIndividualByEmail(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -229,4 +229,13 @@ public class RentalManager implements RentalService {
 			oldCar.setState(1);		
 		}
 	}
+
+	@Override
+	public Rental findRentalById(int rentalId) {
+		Rental rental = this.rentalRepository.findById(rentalId);
+		if (rental == null) {
+			throw new BusinessException("THERE.IS.NOT.THIS.RENTAL");
+		}
+		return rental;
+	}
 }

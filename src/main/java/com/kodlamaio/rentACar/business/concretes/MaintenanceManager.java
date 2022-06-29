@@ -138,4 +138,13 @@ public class MaintenanceManager implements MaintenanceService {
 			this.carRepository.save(car);
 		}
 	}
+
+	@Override
+	public Maintenance findMaintenanceById(int id) {
+		Maintenance maintenance = this.maintenanceRepository.findById(id);
+		if (maintenance == null) {
+			throw new BusinessException("THERE.IS.NOT.THIS.MAINTENANCE");
+		}
+		return maintenance;
+	}
 }
