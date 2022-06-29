@@ -11,9 +11,11 @@ import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
 public interface RentalService {
-	Result add(CreateRentalRequest createRentalRequest);
+	Result addIndividualCustormer(CreateRentalRequest createRentalRequest);
+	Result addCorporateCustormer(CreateRentalRequest createRentalRequest);
 	Result delete(DeleteRentalRequest deleteRentalRequest);
-	Result update(UpdateRentalRequest updateRentalRequest);
+	Result updateIndividualCustomer(UpdateRentalRequest updateRentalRequest);
+	Result updateCorporateCustomer(UpdateRentalRequest updateRentalRequest);
 	DataResult<GetRentalResponse> getById(int id);
 	DataResult<List<GetAllRentalsResponse>> getAll();
 }

@@ -43,7 +43,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	public Result add(CreateIndividualCustomerRequest createIndividualRequest)
 			throws NumberFormatException, RemoteException {
 		checkUserNationalityFromRepository(createIndividualRequest.getNationality());
-		checkIfUserExistsByNationalityFromMernis(createIndividualRequest);
+		//checkIfUserExistsByNationalityFromMernis(createIndividualRequest);
 		checkUserEmail(createIndividualRequest.getEmail());
 		IndividualCustomer individualCustomer = this.mapperService.forRequest().map(createIndividualRequest,
 				IndividualCustomer.class);
@@ -61,9 +61,11 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	@Override
 	public Result update(UpdateIndividualCustomerRequest updateIndividualRequest) {
 		checkIfUserExists(updateIndividualRequest.getIndividualCustomerId());
-		checkUserNationalityFromRepository(updateIndividualRequest.getNationality());
+		//checkIfUserExistsByNationalityFromMernis(createIndividualRequest);
 		checkUserUpdateEmail(updateIndividualRequest.getIndividualCustomerId(), updateIndividualRequest.getEmail());
-		IndividualCustomer individualCustomer = this.mapperService.forRequest().map(updateIndividualRequest,
+		IndividualCustomer individualCustomer = this.individualCustomerRepository.findById(updateIndividualRequest.getIndividualCustomerId());
+		checkNationalityForUpdate(individualCustomer);
+		individualCustomer = this.mapperService.forRequest().map(updateIndividualRequest,
 				IndividualCustomer.class);
 		this.individualCustomerRepository.save(individualCustomer);
 		return new SuccessResult("USER.UPDATED");
@@ -110,7 +112,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	private void checkUserNationalityFromRepository(String nationality) {
 		IndividualCustomer user = this.individualCustomerRepository.findByNationality(nationality);
 		if (user != null) {
-			throw new BusinessException("USER.EXISTS.REPOSITORY");
+			throw new BusinessException("USER.ALREADY.EXISTS");
 		}
 	}
 
@@ -130,9 +132,15 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	
 	private void checkUserUpdateEmail(int userId, String email) {
 		IndividualCustomer user = this.individualCustomerRepository.findById(userId);
-		
 		if (user.getEmail() != email) {
 			checkUserEmail(email);
+		}
+	}
+	
+	private void checkNationalityForUpdate(IndividualCustomer newIndividualCustomer) {
+		IndividualCustomer oldindividualCustomer = this.individualCustomerRepository.findById(newIndividualCustomer.getId());
+		if (newIndividualCustomer.getNationality() != oldindividualCustomer.getNationality()) {
+			checkUserNationalityFromRepository(newIndividualCustomer.getNationality());
 		}
 	}
 }

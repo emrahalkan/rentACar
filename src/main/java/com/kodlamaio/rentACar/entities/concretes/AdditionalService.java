@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "additional_services")
 public class AdditionalService {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -32,15 +33,15 @@ public class AdditionalService {
 	@Column(name = "total_price")
 	private double totalPrice;
 	
-	@ManyToOne
-	@JoinColumn(name="rental_id")
-	private Rental rental;
-	
 	@Column(name="pickup_date")
 	private LocalDate pickupDate;
 	
 	@Column(name="return_date")
 	private LocalDate returnDate;
+	
+	@ManyToOne
+	@JoinColumn(name="rental_id")
+	private Rental rental;
 	
 	@ManyToOne
 	@JoinColumn(name = "additional_item_id")

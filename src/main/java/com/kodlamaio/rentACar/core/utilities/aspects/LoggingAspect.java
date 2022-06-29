@@ -22,33 +22,33 @@ public class LoggingAspect {
 
 	// @Before("execution(*
 	// com.kodlamaio.rentACar.business.concretes.BrandManager.*(..))")
-	@Before("execution(* com.kodlamaio.rentACar.business.concretes.*.*(..))")
-	public void beforeLog(JoinPoint joinPoint) throws JsonEOFException, IOException {
-		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-		StringBuilder builder = new StringBuilder();
-		ObjectMapper mapper = new ObjectMapper();
+//	@Before("execution(* com.kodlamaio.rentACar.business.concretes.*.*(..))")
+//	public void beforeLog(JoinPoint joinPoint) throws JsonEOFException, IOException {
+//		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+//		StringBuilder builder = new StringBuilder();
+//		ObjectMapper mapper = new ObjectMapper();
 		
 //		builder.append("date :" + LocalDate.now());
-		builder.append(",\n{");
-		builder.append(("\n" + "\"date\":") + mapper.writeValueAsString(LocalDate.now().getYear() + "-"+LocalDate.now().getMonthValue() + "-" + LocalDate.now().getDayOfMonth()));
-		//builder.append(String.format("date: %s", LocalDate.now()));
-		//builder.append(String.format("className %s" , joinPoint.getTarget().getClass().getSimpleName()));
-		builder.append("\n" + "\"className\":" + mapper.writeValueAsString(joinPoint.getTarget().getClass().getSimpleName()));
-		//builder.append("\"className\":" +  joinPoint.getTarget().getClass().getSimpleName());
-		builder.append("\n" +  "\"methodName\":"  + mapper.writeValueAsString(signature.getMethod().getName()));
+//		builder.append(",\n{");
+//		builder.append(("\n" + "\"date\":") + mapper.writeValueAsString(LocalDate.now().getYear() + "-"+LocalDate.now().getMonthValue() + "-" + LocalDate.now().getDayOfMonth()));
+//		//builder.append(String.format("date: %s", LocalDate.now()));
+//		//builder.append(String.format("className %s" , joinPoint.getTarget().getClass().getSimpleName()));
+//		builder.append("\n" + "\"className\":" + mapper.writeValueAsString(joinPoint.getTarget().getClass().getSimpleName()));
+//		//builder.append("\"className\":" +  joinPoint.getTarget().getClass().getSimpleName());
+//		builder.append("\n" +  "\"methodName\":"  + mapper.writeValueAsString(signature.getMethod().getName()));
 
 	
 
-		if (signature.getMethod().getName() != "getAll") {
-			builder.append("\n" + "\"parameters:\":" + mapper.writeValueAsString(joinPoint.getArgs())); // java reflection
-		
-		} else {
-			builder.append("\n" + "\"parameter:\":" + "null");
-			
-		}
-		builder.append("\n" +"}");
-		//builderList.add(builder);
-		File file = new File("C:\\logs\\operations.json");
+//		if (signature.getMethod().getName() != "getAll") {
+//			builder.append("\n" + "\"parameters:\":" + mapper.writeValueAsString(joinPoint.getArgs())); // java reflection
+//		
+//		} else {
+//			builder.append("\n" + "\"parameter:\":" + "null");
+//			
+//		}
+//		builder.append("\n" +"}");
+//		//builderList.add(builder);
+//		File file = new File("C:\\logs\\operations.json");
 //		try {
 //		
 //			ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
@@ -57,11 +57,11 @@ public class LoggingAspect {
 //			System.out.println(exception.getMessage());
 //		}
 				
-		try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file,true)) ) {
-			bufferedWriter.write(builder.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+//		try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file,true)) ) {
+//			bufferedWriter.write(builder.toString());
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
 
 
 	
@@ -110,4 +110,4 @@ public class LoggingAspect {
 //	@Pointcut("execution(* com.kodlamaio.rentACar.business.concretes.BrandManger.getById(int)) ") //.. hepsi için
 //	public void pointcut() {} //kesişim noktası //dummy
 	}
-}
+

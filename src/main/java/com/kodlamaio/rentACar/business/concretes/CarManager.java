@@ -72,7 +72,7 @@ public class CarManager implements CarService {
 		checkIfCarExists(updateCarRequest.getId());
 		checkColorExists(updateCarRequest.getColorId());
 		checkCityExists(updateCarRequest.getCityId());
-		checkBrandExists(updateCarRequest.getBrandId());
+		
 		Car car = this.carRepository.findById(updateCarRequest.getId());
 		checkBrandNameFromUpdate(car);
 		checkCarNumberPlateFromUpdate(car);

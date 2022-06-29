@@ -27,9 +27,14 @@ public class RentalsController {
 		this.rentalService = rentalService;
 	}
 	
-	@PostMapping("/add")
-	public Result add(@RequestBody CreateRentalRequest createRentalRequest) {
-		return this.rentalService.add(createRentalRequest);
+	@PostMapping("/addIndividualCustomer")
+	public Result addIndividual(@RequestBody CreateRentalRequest createRentalRequest) {
+		return this.rentalService.addIndividualCustormer(createRentalRequest);
+	}
+	
+	@PostMapping("/addCorporateCustomer")
+	public Result addCorporate(@RequestBody CreateRentalRequest createRentalRequest) {
+		return this.rentalService.addCorporateCustormer(createRentalRequest);
 	}
 	
 	@PostMapping("/delete")
@@ -37,9 +42,14 @@ public class RentalsController {
 		return this.rentalService.delete(deleteRentalRequest);
 	}
 	
-	@PostMapping("/update")
-	public Result update(@RequestBody UpdateRentalRequest updateRentalRequest) {
-		return this.rentalService.update(updateRentalRequest);
+	@PostMapping("/updateIndividualCustomer")
+	public Result updateIndividual(@RequestBody UpdateRentalRequest updateRentalRequest) {
+		return this.rentalService.updateIndividualCustomer(updateRentalRequest);
+	}
+	
+	@PostMapping("/updateCorporateCustomer")
+	public Result updateCorporate(@RequestBody UpdateRentalRequest updateRentalRequest) {
+		return this.rentalService.updateCorporateCustomer(updateRentalRequest);
 	}
 	
 	@GetMapping("/getById")

@@ -53,7 +53,9 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	@Override
 	public Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) {
 		checkCorporateExists(updateCorporateCustomerRequest.getCorporateCustomerId());
-		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(updateCorporateCustomerRequest,
+		CorporateCustomer corporateCustomer = this.corporateCustomerRepository.findById(updateCorporateCustomerRequest.getCorporateCustomerId());
+		checkCorporateTaxNumberForUpdate(corporateCustomer);
+		corporateCustomer = this.modelMapperService.forRequest().map(updateCorporateCustomerRequest,
 				CorporateCustomer.class);
 		this.corporateCustomerRepository.save(corporateCustomer);
 		return new SuccessResult("CORPORATE.UPDATED");
@@ -103,6 +105,12 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 			throw new BusinessException("CORPORATE.WAS.NOT.FOUND");
 		}
 	}
-
+	
+	private void checkCorporateTaxNumberForUpdate(CorporateCustomer newCorporateCustomer) {
+		CorporateCustomer oldCorporateCustomer = this.corporateCustomerRepository.findById(newCorporateCustomer.getCorporateCustomerId());
+		if (newCorporateCustomer.getTaxNumber() != oldCorporateCustomer.getTaxNumber()) {
+			checkCorporateExistsTaxNumber(newCorporateCustomer.getTaxNumber());
+		}
+	}
 
 }
