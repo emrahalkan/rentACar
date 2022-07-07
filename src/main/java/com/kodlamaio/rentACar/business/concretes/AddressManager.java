@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.AddressService;
+import com.kodlamaio.rentACar.business.abstracts.IndividualCustomerService;
 import com.kodlamaio.rentACar.business.requests.addresses.CreateAddressRequest;
 import com.kodlamaio.rentACar.business.requests.addresses.DeleteAddressRequest;
 import com.kodlamaio.rentACar.business.requests.addresses.UpdateAddressRequest;
@@ -20,27 +21,25 @@ import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.AddressRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CorporateCustomerRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CustomerRepository;
-import com.kodlamaio.rentACar.dataAccess.abstracts.IndividualCustomerRepository;
 import com.kodlamaio.rentACar.entities.concretes.Address;
 import com.kodlamaio.rentACar.entities.concretes.CorporateCustomer;
 import com.kodlamaio.rentACar.entities.concretes.Customer;
-import com.kodlamaio.rentACar.entities.concretes.IndividualCustomer;
 
 @Service
 public class AddressManager implements AddressService {
 	private AddressRepository addressRepository;
 	private ModelMapperService modelMapperService;
-	private IndividualCustomerRepository individualCustomerRepository;
+	private IndividualCustomerService individualCustomerService;
 	private CorporateCustomerRepository corporateCustomerRepository;
-	private CustomerRepository customerRepository;
+//	private CustomerRepository customerRepository;
 
-	public AddressManager(AddressRepository addressRepository, ModelMapperService modelMapperService, IndividualCustomerRepository individualCustomerRepository,
+	public AddressManager(AddressRepository addressRepository, ModelMapperService modelMapperService, IndividualCustomerService individualCustomerService,
 			CorporateCustomerRepository corporateCustomerRepository, CustomerRepository customerRepository	) {
 		this.addressRepository = addressRepository;
 		this.modelMapperService = modelMapperService;
-		this.individualCustomerRepository = individualCustomerRepository;
+		this.individualCustomerService = individualCustomerService;
 		this.corporateCustomerRepository = corporateCustomerRepository;
-		this.customerRepository = customerRepository;
+		//this.customerRepository = customerRepository;
 	}
 
 	@Override
@@ -113,10 +112,7 @@ public class AddressManager implements AddressService {
 	}
 	
 	private void checkIndividualExists(int individualId) {
-		IndividualCustomer individualCustomer = this.individualCustomerRepository.findById(individualId);
-		if (individualCustomer == null) {
-			throw new BusinessException("THERE.IS.NOT.THIS.INDIVIDUALCUSTOMER");
-		}
+		this.individualCustomerService.findIndividualById(individualId);
 	}
 	
 	private void checkCorporateExists(int corporateId) {
@@ -127,10 +123,10 @@ public class AddressManager implements AddressService {
 	}
 	
 	private void checkCustomerExists(int customerId) {
-		Customer customer = this.customerRepository.findById(customerId);
-		if (customer == null) {
-			throw new BusinessException("THERE.IS.NOT.THIS.CORPORATECUSTOMER");
-		}
+	//	Customer customer = this.customerRepository.findById(customerId);
+//		if (customer == null) {
+//			throw new BusinessException("THERE.IS.NOT.THIS.CORPORATECUSTOMER");
+//		}
 	}
 
 }

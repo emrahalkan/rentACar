@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="cars")
+@Builder
 public class Car {
 	@Id()
 	@GeneratedValue(strategy= GenerationType.IDENTITY)

@@ -43,7 +43,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	public Result add(CreateIndividualCustomerRequest createIndividualRequest)
 			throws NumberFormatException, RemoteException {
 		checkUserNationalityFromRepository(createIndividualRequest.getNationality());
-		//checkIfUserExistsByNationalityFromMernis(createIndividualRequest);
+		// checkIfUserExistsByNationalityFromMernis(createIndividualRequest);
 		checkUserEmail(createIndividualRequest.getEmail());
 		IndividualCustomer individualCustomer = this.mapperService.forRequest().map(createIndividualRequest,
 				IndividualCustomer.class);
@@ -61,12 +61,12 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	@Override
 	public Result update(UpdateIndividualCustomerRequest updateIndividualRequest) {
 		checkIfUserExists(updateIndividualRequest.getIndividualCustomerId());
-		//checkIfUserExistsByNationalityFromMernis(createIndividualRequest);
+		// checkIfUserExistsByNationalityFromMernis(createIndividualRequest);
 		checkUserUpdateEmail(updateIndividualRequest.getIndividualCustomerId(), updateIndividualRequest.getEmail());
-		IndividualCustomer individualCustomer = this.individualCustomerRepository.findById(updateIndividualRequest.getIndividualCustomerId());
+		IndividualCustomer individualCustomer = this.individualCustomerRepository
+				.findById(updateIndividualRequest.getIndividualCustomerId());
 		checkNationalityForUpdate(individualCustomer);
-		individualCustomer = this.mapperService.forRequest().map(updateIndividualRequest,
-				IndividualCustomer.class);
+		individualCustomer = this.mapperService.forRequest().map(updateIndividualRequest, IndividualCustomer.class);
 		this.individualCustomerRepository.save(individualCustomer);
 		return new SuccessResult("USER.UPDATED");
 	}
@@ -122,23 +122,24 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 			throw new BusinessException("THERE.IS.NOT.USER");
 		}
 	}
-	
+
 	private void checkUserEmail(String email) {
 		IndividualCustomer user = this.individualCustomerRepository.findByEmail(email);
 		if (user != null) {
 			throw new BusinessException("THIS.EMAIL.ALREADEY.EXISTS");
 		}
 	}
-	
+
 	private void checkUserUpdateEmail(int userId, String email) {
 		IndividualCustomer user = this.individualCustomerRepository.findById(userId);
 		if (user.getEmail() != email) {
 			checkUserEmail(email);
 		}
 	}
-	
+
 	private void checkNationalityForUpdate(IndividualCustomer newIndividualCustomer) {
-		IndividualCustomer oldindividualCustomer = this.individualCustomerRepository.findById(newIndividualCustomer.getId());
+		IndividualCustomer oldindividualCustomer = this.individualCustomerRepository
+				.findById(newIndividualCustomer.getId());
 		if (newIndividualCustomer.getNationality() != oldindividualCustomer.getNationality()) {
 			checkUserNationalityFromRepository(newIndividualCustomer.getNationality());
 		}
@@ -146,19 +147,28 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
 	@Override
 	public IndividualCustomer findIndividualById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		IndividualCustomer individualCustomer = this.individualCustomerRepository.findById(id);
+		if (individualCustomer == null) {
+			throw new BusinessException("THERE.IS.NOT.THIS.INDIVIDUAL.CUSTOMER");
+		}
+		return individualCustomer;
 	}
 
 	@Override
 	public IndividualCustomer findIndividualByNationality(String nationality) {
-		// TODO Auto-generated method stub
-		return null;
+		IndividualCustomer individualCustomer = this.individualCustomerRepository.findByNationality(nationality);
+		if (individualCustomer == null) {
+			throw new BusinessException("THERE.IS.NOT.THIS.INDIVIDUAL.CUSTOMER.NATIONALITY");
+		}
+		return individualCustomer;
 	}
 
 	@Override
 	public IndividualCustomer findIndividualByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		IndividualCustomer individualCustomer = this.individualCustomerRepository.findByEmail(email);
+		if (individualCustomer == null) {
+			throw new BusinessException("THERE.IS.NOT.THIS.INDIVIDUAL.CUSTOMER.EMAIL");
+		}
+		return individualCustomer;
 	}
 }

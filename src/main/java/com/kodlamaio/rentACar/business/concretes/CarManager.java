@@ -53,7 +53,19 @@ public class CarManager implements CarService {
 		checkColorExists(createCarRequest.getColorId());
 		checkCityExists(createCarRequest.getCityId());
 		checkBrandExists(createCarRequest.getBrandId());
-		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
+		//Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
+		Color color = Color.builder().id(createCarRequest.getColorId()).build();
+		Brand brand = Brand.builder().id(createCarRequest.getBrandId()).build();
+		City city = City.builder().id(createCarRequest.getCityId()).build();
+		Car car = Car.builder().dailyPrice(createCarRequest.getDailyPrice())
+				.kilometer(createCarRequest.getKilometer())
+				.description(createCarRequest.getDescription())
+				.numberPlate(createCarRequest.getNumberPlate())
+				.minFindexScore(createCarRequest.getMinFindexScore())
+				.color(color)
+				.brand(brand)
+				.city(city)
+				.build();
 		car.setState(1);
 		this.carRepository.save(car);
 		return new SuccessResult("CAR.ADDED");
